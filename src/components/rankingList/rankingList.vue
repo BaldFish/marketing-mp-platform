@@ -1,12 +1,12 @@
 <template>
-  <div class="details">
-    details
+  <div class="rankingList">
+    rankingList
   </div>
 </template>
 
 <script>
   export default {
-    name: "details",
+    name: "rankingList",
     components: {},
     data() {
       return {}
@@ -24,6 +24,6 @@
 </script>
 
 <style scoped lang="stylus">
-  .details {
+  .rankingList {
   }
 </style>

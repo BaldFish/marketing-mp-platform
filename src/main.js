@@ -13,17 +13,7 @@ import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
 Vue.use(ElementUI);
 
-//引入省、市、区三级联动
-import {pca, pcaa} from 'area-data';
-import 'vue-area-linkage/dist/index.css';
-import VueAreaLinkage from 'vue-area-linkage';
-Vue.use(VueAreaLinkage);
-
 import '@/common/js/validate.js'
-
-import wcSwiper from 'wc-swiper'
-import 'wc-swiper/style.css'
-Vue.use(wcSwiper);
 
 import VueAwesomeSwiper from 'vue-awesome-swiper'
 import 'swiper/dist/css/swiper.css'
@@ -32,10 +22,6 @@ Vue.use(VueAwesomeSwiper);
 
 import axios from 'axios';
 Vue.prototype.$axios= axios;
-
-// 引入echarts
-import echarts from 'echarts'
-Vue.prototype.$echarts = echarts;
 
 //引入时间选择器
 import Calendar from 'vue2-datepick';

@@ -3,14 +3,14 @@
     <div class="main_wrap">
       <router-view class="main" v-if="isRouterAlive"></router-view>
     </div>
-    <div class="footer_wrap" v-if="display" id="footer">
+    <!--<div class="footer_wrap" v-if="display" id="footer">
       <ul class="footer">
         <li v-for="(item,index) of tabsParam" :class="{'active': index===nowIndex,}" @click="tabChange(index)">
           <img :src="item.img" alt="">
           <p>{{item.text}}</p>
         </li>
       </ul>
-    </div>
+    </div>-->
   </div>
 </template>
 
@@ -30,7 +30,7 @@
       }
     },
     beforeMount() {
-      this.getPath();
+      //this.getPath();
     },
     mounted() {
       let u = navigator.userAgent;
@@ -71,7 +71,7 @@
     watch: {
       //监听路由变化执行方法
       $route(to, from) {
-        this.getPath();
+        //this.getPath();
       }
     },
     methods: {
@@ -81,7 +81,7 @@
           this.isRouterAlive = true
         })
       },
-      //根据路由判断底部tabs是否显示以及样式切换
+      /*//根据路由判断底部tabs是否显示以及样式切换
       getPath() {
         let path = this.$route.path;
         if (this.$_.includes(path, "/reportQuery")) {
@@ -134,7 +134,7 @@
             this.$router.push('/login');
           }
         }
-      },
+      },*/
     }
   }
 </script>
@@ -154,11 +154,11 @@
       min-width 640px
       .main {
         flex: 1;
-        padding-bottom 98px
+        //padding-bottom 98px
       }
     }
     
-    .footer_wrap {
+    /*.footer_wrap {
       width 100%
       margin 0 auto
       min-width 640px
@@ -170,7 +170,7 @@
       .footer {
         font-size 0
         box-sizing border-box
-        border-top solid 1px #e5e5e5; /*no*/
+        border-top solid 1px #e5e5e5; !*no*!
         width 750px
         height 98px
         margin 0 auto
@@ -189,7 +189,7 @@
           }
           
           p {
-            font-size 28px; /*px*/
+            font-size 28px; !*px*!
             color #333333
           }
         }
@@ -200,7 +200,7 @@
           }
         }
       }
-    }
+    }*/
   }
 </style>
 
