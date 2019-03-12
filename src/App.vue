@@ -81,60 +81,6 @@
           this.isRouterAlive = true
         })
       },
-      /*//根据路由判断底部tabs是否显示以及样式切换
-      getPath() {
-        let path = this.$route.path;
-        if (this.$_.includes(path, "/reportQuery")) {
-          this.tabsParam = [
-            {img: require("@/common/images/baogaochaxun_dj.png"), text: "报告查询"},
-            {img: require("@/common/images/dingdan_mr.png"), text: "订单"},
-            {img: require("@/common/images/personal_mr.png"), text: "个人中心"}
-          ];
-          this.nowIndex = 0;
-          this.display = true
-        } else if (this.$_.includes(path, "/order")) {
-          this.tabsParam = [
-            {img: require("@/common/images/baogaochaxun_mr.png"), text: "报告查询"},
-            {img: require("@/common/images/dingdan_dj.png"), text: "订单"},
-            {img: require("@/common/images/personal_mr.png"), text: "个人中心"}
-          ];
-          this.nowIndex = 1;
-          this.display = true
-        } else if (this.$_.includes(path, "/personalCenter")) {
-          this.tabsParam = [
-            {img: require("@/common/images/baogaochaxun_mr.png"), text: "报告查询"},
-            {img: require("@/common/images/dingdan_mr.png"), text: "订单"},
-            {img: require("@/common/images/personal_dj.png"), text: "个人中心"}
-          ];
-          this.nowIndex = 2;
-          this.display = true
-        } else {
-          this.display = false
-        }
-      },
-      //点击底部tab切换路由
-      tabChange(index) {
-        let userId = this.$utils.getCookie("userId");
-        this.nowIndex = index;
-        if (index === 0) {
-          this.$router.push('/reportQuery');
-        } else if (index === 1) {
-          //this.$router.push('/order');
-          if (userId) {
-            this.$router.push('/order');
-          } else {
-            window.sessionStorage.setItem('url', '/order');
-            this.$router.push('/login');
-          }
-        } else if (index === 2) {
-          if (userId) {
-            this.$router.push('/personalCenter');
-          } else {
-            window.sessionStorage.setItem('url', '/personalCenter');
-            this.$router.push('/login');
-          }
-        }
-      },*/
     }
   }
 </script>
