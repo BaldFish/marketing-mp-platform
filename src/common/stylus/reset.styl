@@ -2,6 +2,11 @@
  * Eric Meyer's Reset CSS v2.0 (http://meyerweb.com/eric/tools/css/reset/)
  * http://cssreset.com
  */
+*,*:before,*:after{
+  box-sizing border-box
+  margin: 0
+  padding: 0
+}
 html, body, div, span, applet, object, iframe,
 h1, h2, h3, h4, h5, h6, p, blockquote, pre,
 a, abbr, acronym, address, big, cite, code,
@@ -61,6 +66,9 @@ li
 body
   -webkit-text-size-adjust: none
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0)
-
+button
+  border: none;
+  background-color: transparent;
+  outline: none;
 //苹果系统input类型框 系统默认css样式问题
 input,button{-webkit-appearance:none;outline:none}
