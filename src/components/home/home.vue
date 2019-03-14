@@ -5,7 +5,7 @@
         <swiper-slide v-for="(slide, index) in slides" :key="index" v-if="slides.length">
           <img :src="slide.url" alt="">
         </swiper-slide>
-        <div class="swiper-pagination" slot="pagination"></div>
+        <div class="swiper-pagination" slot="pagination" v-if="slides.length>1"></div>
       </swiper>
     </div>
     <div class="summary">
@@ -82,34 +82,6 @@
       width 750px
       height 300px
       margin 0 auto
-      .swiper {
-        .wc-slide {
-          width 750px
-          height 300px
-          img {
-            width 750px
-            height 300px
-          }
-        }
-      
-        .wc-pagination {
-          bottom 16px
-        
-          .wc-dot {
-            height: 14px;
-            width: 14px;
-            background: #5226f3;
-            opacity: .3;
-            margin: 0 9px;
-            border-radius: 50%;
-          }
-        
-          .wc-dot-active {
-            opacity: 1;
-            background: #5226f3;
-          }
-        }
-      }
       .awesome_swiper{
         .swiper-wrapper{
           width 750px
