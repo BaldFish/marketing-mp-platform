@@ -27,84 +27,22 @@
                 <td>2300</td>
               </tr>
             </table>
-            <!--<ul>
-              <li class="list clearfix">
-                <div class="title_time fl">
-                  <div class="title">成功支付订单</div>
-                  <div class="time">2019.02.08 11:23</div>
-                </div>
-                <div class="record fr">+20</div>
-              </li>
-              <li class="list clearfix">
-                <div class="title_time fl">
-                  <div class="title">成功支付订单</div>
-                  <div class="time">2019.02.08 11:23</div>
-                </div>
-                <div class="record fr">+20</div>
-              </li>
-              <li class="list clearfix">
-                <div class="title_time fl">
-                  <div class="title">成功支付订单</div>
-                  <div class="time">2019.02.08 11:23</div>
-                </div>
-                <div class="record fr">+20</div>
-              </li>
-              <li class="list clearfix">
-                <div class="title_time fl">
-                  <div class="title">成功支付订单</div>
-                  <div class="time">2019.02.08 11:23</div>
-                </div>
-                <div class="record fr">+20</div>
-              </li>
-              <li class="list clearfix">
-                <div class="title_time fl">
-                  <div class="title">成功支付订单</div>
-                  <div class="time">2019.02.08 11:23</div>
-                </div>
-                <div class="record fr">+20</div>
-              </li>
-              <li class="list clearfix">
-                <div class="title_time fl">
-                  <div class="title">成功支付订单</div>
-                  <div class="time">2019.02.08 11:23</div>
-                </div>
-                <div class="record fr">+20</div>
-              </li>
-              <li class="list clearfix">
-                <div class="title_time fl">
-                  <div class="title">成功支付订单</div>
-                  <div class="time">2019.02.08 11:23</div>
-                </div>
-                <div class="record fr">+20</div>
-              </li>
-              <li class="list clearfix">
-                <div class="title_time fl">
-                  <div class="title">成功支付订单</div>
-                  <div class="time">2019.02.08 11:23</div>
-                </div>
-                <div class="record fr">+20</div>
-              </li>
-              <li class="list clearfix">
-                <div class="title_time fl">
-                  <div class="title">成功支付订单</div>
-                  <div class="time">2019.02.08 11:23</div>
-                </div>
-                <div class="record fr">+20</div>
-              </li>
-              <li class="list clearfix">
-                <div class="title_time fl">
-                  <div class="title">成功支付订单</div>
-                  <div class="time">2019.02.08 11:23</div>
-                </div>
-                <div class="record fr">+20</div>
-              </li>
-            </ul>-->
             <div class="swipe_up" v-if="swipeUp">加载中...</div>
           </div>
         </div>
       </div>
     </div>
-  
+    <div class="rules_wrap">
+      <div class="rules_title">*活动规则*</div>
+      <ul class="rules">
+        <li class="rule">1-<span>活动时间：2019年3月4日-2019年7月15日（为期20周）；</span></li>
+        <li class="rule">1-<span>活动时间：2019年3月4日-2019年7月15日（为期20周）；</span></li>
+        <li class="rule">1-<span>活动时间：2019年3月4日-2019年7月15日（为期20周）；</span></li>
+        <li class="rule">1-<span>活动时间：2019年3月4日-2019年7月15日（为期20周）；</span></li>
+        <li class="rule">1-<span>活动时间：2019年3月4日-2019年7月15日（为期20周）；</span></li>
+        <li class="rule">1-<span>活动时间：2019年3月4日-2019年7月15日（为期20周）；</span></li>
+      </ul>
+    </div>
   </div>
 </template>
 
@@ -327,6 +265,34 @@
             }
           }
           
+        }
+      }
+    }
+    .rules_wrap{
+      width: 680px;
+      //height: 726px;
+      box-shadow: 0px 2px 27px 8px rgba(14, 14, 14, 0.08);
+      border-radius: 30px;
+      margin 0 auto
+      margin-top 40px
+      margin-bottom 100px
+      .rules_title {
+        font-size: 34px; /*px*/
+        line-height: 100px;
+        color: #386cff;
+        text-align center
+      }
+      .rules{
+        width 610px
+        margin 0 auto
+        padding-bottom 50px
+        .rule{
+          line-height 36px
+          font-size: 24px;/*px*/
+          color: #333333;
+          span{
+            padding-left 40px
+          }
         }
       }
     }

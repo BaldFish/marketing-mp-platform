@@ -12,10 +12,15 @@
         <li>注意事项：<span>每个ID兑换一次</span></li>
         <li>重要说明：<span>一切解释权归人人道所有</span></li>
       </ul>
-      <button :disabled="disabled">
-        确认兑换
-      </button>
+      <button v-if="disabled" @click="centerDialogVisible = true">确认兑换</button>
+      <button class="disabled" v-if="!disabled">确认兑换</button>
     </div>
+    <el-dialog title="验证手机号" :visible.sync="centerDialogVisible" center :close-on-click-modal='false' class="phone_dialog">
+      <div class="title_close">
+        <p>验证手机号</p>
+        <span class="el-icon-close"></span>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -25,7 +30,8 @@
     components: {},
     data() {
       return {
-        disabled: false
+        centerDialogVisible: true,
+        disabled: true,
       }
     },
     created() {
@@ -64,17 +70,18 @@
       box-sizing border-box
       width 750px
       margin 0 auto
+      
       h3 {
         margin-top 53px
         padding-left 40px
-        font-size: 48px;/*px*/
+        font-size: 48px; /*px*/
         color: #222222;
       }
       
       p {
         margin-top 23px
         padding-left 40px
-        font-size: 26px;/*px*/
+        font-size: 26px; /*px*/
         color: #222222;
       }
       
@@ -84,10 +91,11 @@
         
         li {
           margin-top 46px
-          font-size: 26px;/*px*/
+          font-size: 26px; /*px*/
           color: #222222;
-          span{
-            font-size: 28px;/*px*/
+          
+          span {
+            font-size: 28px; /*px*/
             color: #222222;
             font-weight bold
           }
@@ -104,6 +112,51 @@
         color: #ffffff;
         margin 0 auto
         margin-top 102px
+      }
+      
+      .disabled {
+        background-color: #999999;
+      }
+    }
+    .phone_dialog {
+      .title_close{
+        position relative
+        p{
+          height 106px
+          line-height 105px
+          font-size: 32px;/*px*/
+          color: #333333;
+          text-align center
+          font-weight bold
+          border-bottom: solid 1px #eeeeee;/*no*/
+        }
+        span{
+          position absolute
+          top 33px
+          right 43px
+          font-size 32px;/*px*/
+        }
+      }
+    }
+  }
+</style>
+<style lang="stylus">
+  .description{
+    .phone_dialog {
+      .el-dialog{
+        width 560px
+        height 340px
+        border-radius: 32px;
+        margin-top 240px!important
+        .el-dialog__header{
+          display none
+      }
+        .el-dialog__body{
+          padding 0
+          margin 0
+          width 100% !important
+          height 100% !important
+        }
       }
     }
   }

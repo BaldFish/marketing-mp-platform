@@ -5,6 +5,7 @@ import myLogin from '@/components/login/login'
 import myRankingList from '@/components/rankingList/rankingList'
 import myDescription from '@/components/description/description'
 import myIntegralList from '@/components/integralList/integralList'
+import myOrder from '@/components/order/order'
 Vue.use(Router);
 
 export default new Router({
@@ -38,6 +39,11 @@ export default new Router({
       path:'/integralList',
       name:'integralList',
       component:myIntegralList
+    },
+    {
+      path:'/order',
+      name:'order',
+      component:myOrder
     },
   ]
 })

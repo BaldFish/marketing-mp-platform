@@ -15,7 +15,7 @@
         </div>
         <div class="phone_integral">
           <p class="phone">18801370245</p>
-          <p class="integral">我的元积分：<span>452266</span></p>
+          <p class="integral">我的元积分：<span>452266&nbsp;&nbsp;</span><img src="../../common/images/right.png" alt=""></p>
         </div>
       </div>
       <div>
@@ -134,10 +134,12 @@
           font-size: 38px;/*px*/
           color: #222222;
           line-height 48px
-          padding-right 40px
-          background url("../../common/images/right.png") no-repeat right
           span{
             color: #386cff;
+          }
+          img{
+            max-width 17px
+            max-height 29px
           }
         }
       }
