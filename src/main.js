@@ -43,6 +43,9 @@ import wx from 'weixin-js-sdk'
 import wxShare from './common/js/share'
 Vue.prototype.$wxShare=wxShare;
 
+import VueScroller from 'vue-scroller';
+Vue.use(VueScroller);
+
 
 Vue.config.productionTip = false;
 /* eslint-disable no-new */

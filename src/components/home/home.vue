@@ -1,11 +1,11 @@
 <template>
   <div class="home">
     <div class="swiper_wrap">
-      <swiper :options="swiperOption" class="awesome_swiper" ref="swiperOption" >
-        <swiper-slide v-for="(slide, index) in slides" :key="index" v-if="slides.length">
+      <swiper :options="swiperOption" class="awesome_swiper" ref="swiperOption">
+        <swiper-slide v-for="(slide, index) in swiperOption.slides" :key="index" v-if="swiperOption.slides.length">
           <img :src="slide.url" alt="">
         </swiper-slide>
-        <div class="swiper-pagination" slot="pagination" v-if="slides.length>1"></div>
+        <div class="swiper-pagination" slot="pagination" v-if="swiperOption.slides.length>1"></div>
       </swiper>
     </div>
     <div class="summary">
@@ -48,20 +48,24 @@
     components: {},
     data() {
       return {
-        slides: [
-          {url:require('../../common/images/banner_bg.png')},
-        ],
-        swiperOption: {
-          autoplay: {
-            delay: 2000,
-            stopOnLastSlide: false,
-            disableOnInteraction: false,
-            loop : true,
-          },
-          pagination: {
+        swiperOption: {//轮播配置
+          pagination: {//标记样式
             el: '.swiper-pagination'
           },
+          slides: [//轮播图片数据
+            {url: require('../../common/images/banner_bg.png')},
+          ],
+          autoplay: {
+            delay: 2000,//轮播时间
+            stopOnLastSlide: false,
+            disableOnInteraction: false,
+            loop: true,//自动轮播
+          },
         },
+        userId:"",
+        token:"",
+        page:1,
+        limit:10,
       }
     },
     created() {
@@ -69,10 +73,37 @@
     beforeMount() {
     },
     mounted() {
+      this.getProductList();
     },
     watch: {},
     computed: {},
-    methods: {},
+    methods: {
+      //获取用户排行
+      getUserRankingList(){
+        this.$axios({
+          method:"GET",
+          url:`${this.$baseURL}/v1/marketing/user/ranking/${this.userId}`,
+          headers: {
+            'Access-Token': `${this.token}`
+          }
+        }).then((res)=>{
+          console.log(res.data.data)
+        }).catch((error)=>{
+          console.log(error.response.data)
+        })
+      },
+      //获取商品列表
+      getProductList(){
+        this.$axios({
+          method:"GET",
+          url:`${this.$baseURL}/v1/marketing/commodity/list?page=${this.page}&limit=${this.limit}`,
+        }).then((res)=>{
+          console.log(res.data.data)
+        }).catch((error)=>{
+          console.log(error.response.data)
+        })
+      },
+    },
   }
 </script>
 
@@ -82,10 +113,12 @@
       width 750px
       height 300px
       margin 0 auto
-      .awesome_swiper{
-        .swiper-wrapper{
+      
+      .awesome_swiper {
+        .swiper-wrapper {
           width 750px
           height 300px
+          
           img {
             width 750px
             height 300px
@@ -93,7 +126,8 @@
         }
       }
     }
-    .summary{
+    
+    .summary {
       width: 680px;
       height: 270px;
       background-color: #ffffff;
@@ -103,15 +137,18 @@
       position relative
       top -60px
       z-index 1000
-      .title_wrap{
+      
+      .title_wrap {
         padding 25px 0 0 25px
         font-size 0
-        .img_wrap{
+        
+        .img_wrap {
           display inline-block
           width 80px
           height 80px
           vertical-align top
           margin-right 30px
+          
           img {
             max-width 80px
             max-height 80px
@@ -122,35 +159,42 @@
           }
         }
       }
-      .phone_integral{
+      
+      .phone_integral {
         display inline-block
         margin-bottom 16px
-        .phone{
-          font-size: 24px;/*px*/
+        
+        .phone {
+          font-size: 24px; /*px*/
           color: #222222;
           line-height 30px
         }
-        .integral{
-          font-size: 38px;/*px*/
+        
+        .integral {
+          font-size: 38px; /*px*/
           color: #222222;
           line-height 48px
-          span{
+          
+          span {
             color: #386cff;
           }
-          img{
+          
+          img {
             max-width 17px
             max-height 29px
           }
         }
       }
-      .ranking,.percentage{
+      
+      .ranking, .percentage {
         text-align center
-        font-size: 34px;/*px*/
+        font-size: 34px; /*px*/
         line-height: 60px;
         color: #333333;
       }
     }
-    .list_wrap{
+    
+    .list_wrap {
       width: 680px;
       min-height: 764px;
       background-color: #ffffff;
@@ -159,17 +203,20 @@
       margin 0 auto
       position relative
       top -28px
-      ul{
-        li{
+      
+      ul {
+        li {
           margin-left 26px
           margin-top 50px
-          div{
+          
+          div {
             width 300px
             height 300px
             background-color: #f4f4f4;
             box-shadow: 2px 1px 12px 1px rgba(119, 119, 119, 0.07);
             text-align center
-            img{
+            
+            img {
               max-width 300px
               max-height 300px
               position: relative;
@@ -177,9 +224,10 @@
               transform: translateY(-50%);
             }
           }
-          p{
+          
+          p {
             text-align center
-            font-size: 30px;/*px*/
+            font-size: 30px; /*px*/
             line-height 78px
             color: #222222;
           }

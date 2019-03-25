@@ -19,7 +19,7 @@
       <p class="login-notice">登录后可查看更多信息~</p>
     </section>
     <div class="errorTip_wrap" >
-      <div class="errorTip" v-if="errorTip">{{errorMessage}}</div>
+      <div class="errorTip" v-if="tips">{{tipsMessage}}</div>
     </div>
   </div>
 </template>
@@ -37,8 +37,8 @@
         phone: "",//手机号
         captchaCode: "",//图形码
         phoneCode: "",//手机验证码
-        errorMessage:"",//错误提示信息
-        errorTip:false,
+        tipsMessage:"",//提示信息
+        tips:false,
         WXcode:"",
         shareTitle:"查车况",
         shareDesc:"维保记录、里程分析、违章查询，你想查的车况信息我都有",
@@ -65,30 +65,15 @@
       'phone': function(val){
         if(val.length != 0){
           if(val.slice(0,1) != 1){
-            this.errorMessage = "手机号首位只能输入1";
-            this.errorTip=true;
-            let that=this;
-            window.setTimeout(function () {
-              that.errorTip=false;
-            },2000);
+            this.callTips("手机号首位只能输入1")
           }
           if(!/^[0-9]+$/.test(val)){
-            this.errorMessage = "手机号不能输入特殊字符";
-            this.errorTip=true;
-            let that=this;
-            window.setTimeout(function () {
-              that.errorTip=false;
-            },2000);
+            this.callTips("手机号不能输入特殊字符")
           }
         }
         if(val.length == 11){
           if (!/^[1][3,4,5,7,8][0-9]{9}$/.test(val)){
-            this.errorMessage = "手机号格式不正确";
-            this.errorTip=true;
-            let that=this;
-            window.setTimeout(function () {
-              that.errorTip=false;
-            },2000);
+            this.callTips("手机号格式不正确");
           }
         }
         //非数字自动删除
@@ -123,18 +108,6 @@
           return null
         }
       },
-      /*getWXcode() {
-        let url = location.search;
-        if (url.indexOf("?") != -1) {
-          let theRequest = new Object();
-          let str = url.substr(1);
-          let strs = str.split("&");
-          for (let i = 0; i < strs.length; i++) {
-            theRequest[strs[i].split("=")[0]] = unescape(strs[i].split("=")[1]);
-          }
-          this.WXcode=theRequest.code;
-        }
-      },*/
       //获取图形验证码
       getCaptcha() {
         this.$axios({
@@ -152,12 +125,7 @@
       getPhoneCode() {
         if (this.phone){
           if (!/^[1][3,4,5,7,8][0-9]{9}$/.test(this.phone)){
-            this.errorMessage = "手机号格式不正确";
-            this.errorTip=true;
-            let that=this;
-            window.setTimeout(function () {
-              that.errorTip=false;
-            },2000);
+            this.callTips("手机号格式不正确");
           } else {
             //倒计时
             let that = this;
@@ -211,31 +179,29 @@
           if(url){
             this.$router.push(url);
           }else{
-            this.$router.push("/home")
+            window.location.href=window.location.href;
           }
         }).catch(error => {
           this.getCaptcha();
-          this.errorMessage=error.response.data.code;
-          this.errorTip=true;
-          let that=this;
-          window.setTimeout(function () {
-            that.errorTip=false;
-          },2000);
+          this.callTips(error.response.data.code);
         })
       },
       //校验手机号
       checkPhone(){
         if (this.phone){
           if (!/^[1][3,4,5,7,8][0-9]{9}$/.test(this.phone)){
-            this.errorMessage = "手机号格式不正确";
-            this.errorTip=true;
-            let that=this;
-            window.setTimeout(function () {
-              that.errorTip=false;
-            },2000);
+            this.callTips('手机号格式不正确')
           }
         }
-      }
+      },
+      //提示信息调用
+      callTips(tipsMessage) {
+        this.tipsMessage = tipsMessage;
+        this.tips = true;
+        window.setTimeout(() => {
+          this.tips = false;
+        }, 2000);
+      },
     },
   }
 </script>
