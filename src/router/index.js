@@ -13,17 +13,17 @@ export default new Router({
   routes: [
     {
       path: "/",
-      redirect: "/home"
-    },
-    {
-      path:'/home',
-      name:'home',
-      component:myHome
+      redirect: "/login"
     },
     {
       path:'/login',
       name:'login',
       component:myLogin
+    },
+    {
+      path:'/home',
+      name:'home',
+      component:myHome
     },
     {
       path:'/rankingList',

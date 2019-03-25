@@ -30,8 +30,9 @@
     components: {},
     data() {
       return {
-        centerDialogVisible: true,
+        centerDialogVisible: false,
         disabled: true,
+        productDetails:{}
       }
     },
     created() {
@@ -39,10 +40,24 @@
     beforeMount() {
     },
     mounted() {
+      this.getProductDetails();
     },
     watch: {},
     computed: {},
-    methods: {},
+    methods: {
+      //获取商品详情
+      getProductDetails(){
+        let id=window.sessionStorage.getItem("productId");
+        this.$axios({
+          method:"GET",
+          url:`${this.$baseURL}/v1/marketing/commodity/details/${id}`,
+        }).then((res)=>{
+          console.log(res.data.data)
+        }).catch((error)=>{
+          console.log(error.response.data)
+        })
+      },
+    },
   }
 </script>
 

@@ -25,17 +25,11 @@
     </div>
     <div class="list_wrap">
       <ul class="clearfix">
-        <li class="fl">
-          <div>
-            <img src="../../common/images/recharge_card.png" alt="">
+        <li class="fl" v-for="item of productList" :key="item.id" @click="turnProductDetails(item.id)">
+          <div class="img_wrap">
+            <img :src="item.url" :alt="item.name">
           </div>
-          <p>20积分</p>
-        </li>
-        <li class="fl">
-          <div>
-            <img src="../../common/images/jd02.png" alt="">
-          </div>
-          <p>20积分</p>
+          <p>{{item.price}}积分</p>
         </li>
       </ul>
     </div>
@@ -66,6 +60,7 @@
         token:"",
         page:1,
         limit:10,
+        productList:[],
       }
     },
     created() {
@@ -87,7 +82,6 @@
             'Access-Token': `${this.token}`
           }
         }).then((res)=>{
-          console.log(res.data.data)
         }).catch((error)=>{
           console.log(error.response.data)
         })
@@ -98,10 +92,16 @@
           method:"GET",
           url:`${this.$baseURL}/v1/marketing/commodity/list?page=${this.page}&limit=${this.limit}`,
         }).then((res)=>{
+          this.productList=res.data.data.res_list;
           console.log(res.data.data)
         }).catch((error)=>{
           console.log(error.response.data)
         })
+      },
+      //跳转商品详情
+      turnProductDetails(id){
+        window.sessionStorage.setItem('productId', id);
+        this.$router.push('/description')
       },
     },
   }
@@ -209,7 +209,7 @@
           margin-left 26px
           margin-top 50px
           
-          div {
+          .img_wrap {
             width 300px
             height 300px
             background-color: #f4f4f4;
