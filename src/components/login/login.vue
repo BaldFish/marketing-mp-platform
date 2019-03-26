@@ -167,7 +167,10 @@
         this.$axios({
           method: 'POST',
           url: `${this.$baseURL}/v1/marketing/user/login`,
-          data: this.$querystring.stringify(loginFormData)
+          data: this.$querystring.stringify(loginFormData),
+          headers:{
+            'Content-Type':'application/x-www-form-urlencoded'
+          }
         }).then(res => {
           document.cookie = `userId=${res.data.data.user_id}`;
           document.cookie = `sessionId=${res.data.data.session_id}`;
