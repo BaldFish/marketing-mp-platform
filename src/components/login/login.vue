@@ -159,9 +159,9 @@
           code: this.phoneCode,//短信验证码
           captcha_number: this.captchaCode, //图片验证码
           captcha_id: this.captchaId, //图片验证码ID
-          device_id: this.deviceId, //设备ID
-          platform: 5,//5-公众号
-          logintype: 1,//1-⼿机验证码登陆，2-微信登陆
+          //device_id: this.deviceId, //设备ID
+          //platform: 5,//5-公众号
+          //logintype: 1,//1-⼿机验证码登陆，2-微信登陆
           weixin_code: this.WXcode,//微信用来获取openid的code
         };
         this.$axios({
@@ -184,7 +184,7 @@
           }
         }).catch(error => {
           this.getCaptcha();
-          this.callTips(error.response.data);
+          this.callTips(error.response.data.message);
         })
       },
       //校验手机号
