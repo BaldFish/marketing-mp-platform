@@ -55,7 +55,7 @@
       if(this.WXcode===null||this.WXcode===""){
         let AppId="wxd182797f554d6b82";
         let local=window.location.href;
-        //window.location.href="https://open.weixin.qq.com/connect/oauth2/authorize?appid="+AppId+"&redirect_uri="+encodeURIComponent(local)+"&response_type=code&scope=snsapi_userinfo&state=STATE#wechat_redirect";
+        window.location.href="https://open.weixin.qq.com/connect/oauth2/authorize?appid="+AppId+"&redirect_uri="+encodeURIComponent(local)+"&response_type=code&scope=snsapi_userinfo&state=STATE#wechat_redirect";
       }
       this.getCaptcha();
     },
