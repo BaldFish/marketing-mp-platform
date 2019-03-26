@@ -44,7 +44,7 @@
         page: 1,
         limit: 10,
         integralList: [],
-        total: 1,
+        total: 0,
       }
     },
     created() {
@@ -85,10 +85,12 @@
           }
         }).then((res) => {
           this.total = res.data.data.total_count;
-          res.data.data.res_list.forEach((item) => {
-            item.updated_at = this.$utils.formatDate(new Date(item.updated_at), "yyyy.MM.dd hh:mm:ss")
-          });
-          this.integralList = res.data.data.res_list;
+          if(res.data.data.res_list){
+            res.data.data.res_list.forEach((item) => {
+              item.updated_at = this.$utils.formatDate(new Date(item.updated_at), "yyyy.MM.dd hh:mm:ss")
+            });
+            this.integralList = res.data.data.res_list;
+          }
         }).catch((error) => {
           console.log(error.response.data)
         })
@@ -105,10 +107,12 @@
             }
           }).then(res => {
             this.total = res.data.data.total_count;
-            res.data.data.res_list.forEach((item) => {
-              item.updated_at = this.$utils.formatDate(new Date(item.updated_at), "yyyy.MM.dd hh:mm:ss")
-            });
-            this.integralList = res.data.data.res_list;
+            if(res.data.data.res_list){
+              res.data.data.res_list.forEach((item) => {
+                item.updated_at = this.$utils.formatDate(new Date(item.updated_at), "yyyy.MM.dd hh:mm:ss")
+              });
+              this.integralList = res.data.data.res_list;
+            }
             this.$refs.my_scroller.finishPullToRefresh()
           }).catch(error => {
             console.log(error)
