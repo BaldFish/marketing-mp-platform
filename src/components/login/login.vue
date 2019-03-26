@@ -157,33 +157,34 @@
         let loginFormData = {
           phone: "+86" + this.phone,//手机号
           code: this.phoneCode,//短信验证码
-          piccode: this.captchaCode, //图片验证码
-          picid: this.captchaId, //图片验证码ID
+          captcha_number: this.captchaCode, //图片验证码
+          captcha_id: this.captchaId, //图片验证码ID
           device_id: this.deviceId, //设备ID
           platform: 5,//5-公众号
           logintype: 1,//1-⼿机验证码登陆，2-微信登陆
-          code2: this.WXcode,//微信用来获取openid的code
+          weixin_code: this.WXcode,//微信用来获取openid的code
         };
         this.$axios({
           method: 'POST',
           url: `${this.$baseURL}/v1/marketing/user/login`,
           data: this.$querystring.stringify(loginFormData)
         }).then(res => {
-          document.cookie = `userId=${res.data.data.userId}`;
-          document.cookie = `sessionId=${res.data.data.sessionId}`;
-          document.cookie = `openId=${res.data.data.openId}`;
+          document.cookie = `userId=${res.data.data.user_id}`;
+          document.cookie = `sessionId=${res.data.data.session_id}`;
+          document.cookie = `openId=${res.data.data.openid}`;
           document.cookie = `token=${res.data.data.token}`;
           document.cookie = `userPhone=${res.data.data.phone}`;
-          document.cookie = `userImgUrl=${res.data.data.imgurl}`;
+          document.cookie = `userImgUrl=${res.data.data.head_img}`;
+          document.cookie = `nickName=${res.data.data.nick_name}`;
           let url=window.sessionStorage.getItem('url');
           if(url){
             this.$router.push(url);
           }else{
-            window.location.href=window.location.href;
+            this.$router.push('/home');
           }
         }).catch(error => {
           this.getCaptcha();
-          this.callTips(error.response.data.code);
+          this.callTips(error.response.data);
         })
       },
       //校验手机号
