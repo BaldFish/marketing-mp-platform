@@ -3,11 +3,11 @@
     <div class="bg_wrap">
       <div class="head_wrap">
         <div class="num_text">
-          <p class="num">45622</p>
+          <p class="num">{{balance}}</p>
           <p class="text">元积分</p>
         </div>
         <div class="btn_wrap">
-          <router-link to="">元积分订单</router-link>
+          <router-link to="/order">元积分订单</router-link>
         </div>
         <div class="list_title">--- <span>积分明细</span> ---</div>
       </div>
@@ -40,6 +40,7 @@
         userId: "",
         token: "",
         phone: "",
+        balance:"",
         page: 1,
         limit: 10,
         integralList: [],
@@ -54,11 +55,26 @@
       this.userId = this.$utils.getCookie("userId");
       this.token = this.$utils.getCookie("token");
       this.phone = this.$utils.getCookie("userPhone");
+      this.getUserRankingList();
       this.getIntegralList();
     },
     watch: {},
     computed: {},
     methods: {
+      //获取用户排行
+      getUserRankingList(){
+        this.$axios({
+          method:"GET",
+          url:`${this.$baseURL}/v1/marketing/user/ranking/${this.userId}`,
+          headers: {
+            'X-Access-Token': `${this.token}`
+          }
+        }).then((res)=>{
+          this.balance=Number(res.data.data.balance);
+        }).catch((error)=>{
+          console.log(error.response.data)
+        })
+      },
       //获取用户积分明细
       getIntegralList() {
         this.$axios({

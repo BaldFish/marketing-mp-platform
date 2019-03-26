@@ -53,7 +53,7 @@
     watch: {},
     computed: {},
     methods: {
-      ////获取用户排行
+      //获取用户排行
       getUserRankingList(){
         this.$axios({
           method:"GET",
@@ -149,7 +149,8 @@
         font-size: 34px; /*px*/
         color: #ffffff;
         margin 0 auto
-        margin-top 102px
+        margin-top 100px
+        margin-bottom 100px
       }
       
       .lastCount {

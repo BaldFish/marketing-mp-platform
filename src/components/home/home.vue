@@ -15,7 +15,7 @@
         </div>
         <div class="phone_integral">
           <p class="phone">{{phone}}</p>
-          <p class="integral">我的元积分：<span>{{userRanking.balance}}&nbsp;&nbsp;</span><img src="../../common/images/right.png" alt=""></p>
+          <p class="integral" @click="turnIntegralList">我的元积分：<span>{{userRanking.balance}}&nbsp;&nbsp;</span><img src="../../common/images/right.png" alt=""></p>
         </div>
       </div>
       <div>
@@ -79,6 +79,10 @@
     watch: {},
     computed: {},
     methods: {
+      //跳转积分列表页
+      turnIntegralList(){
+        this.$router.push('/integralList')
+      },
       //获取用户排行
       getUserRankingList(){
         this.$axios({
