@@ -225,7 +225,7 @@
         
         ul {
           padding 0 30px
-          
+          min-height 810px
           .list {
             border-bottom 1px solid #e5e5e5; /*no*/
             line-height 146px
