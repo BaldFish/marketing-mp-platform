@@ -44,7 +44,7 @@
         page: 1,
         limit: 10,
         integralList: [],
-        totalCount: 1,
+        total: 1,
       }
     },
     created() {
