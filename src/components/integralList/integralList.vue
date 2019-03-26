@@ -12,99 +12,38 @@
         <div class="list_title">--- <span>积分明细</span> ---</div>
       </div>
       <div class="list_wrap">
-        <div class="bscroll" ref="bscroll">
-          <div class="bscroll_container">
-            <div class="drop_down" v-if="dropDown">刷新中...</div>
-            <ul>
-              <li class="list clearfix">
-                <div class="title_time fl">
-                  <div class="title">成功支付订单</div>
-                  <div class="time">2019.02.08 11:23</div>
-                </div>
-                <div class="record fr">+20</div>
-              </li>
-              <li class="list clearfix">
-                <div class="title_time fl">
-                  <div class="title">成功支付订单</div>
-                  <div class="time">2019.02.08 11:23</div>
-                </div>
-                <div class="record fr">+20</div>
-              </li>
-              <li class="list clearfix">
-                <div class="title_time fl">
-                  <div class="title">成功支付订单</div>
-                  <div class="time">2019.02.08 11:23</div>
-                </div>
-                <div class="record fr">+20</div>
-              </li>
-              <li class="list clearfix">
-                <div class="title_time fl">
-                  <div class="title">成功支付订单</div>
-                  <div class="time">2019.02.08 11:23</div>
-                </div>
-                <div class="record fr">+20</div>
-              </li>
-              <li class="list clearfix">
-                <div class="title_time fl">
-                  <div class="title">成功支付订单</div>
-                  <div class="time">2019.02.08 11:23</div>
-                </div>
-                <div class="record fr">+20</div>
-              </li>
-              <li class="list clearfix">
-                <div class="title_time fl">
-                  <div class="title">成功支付订单</div>
-                  <div class="time">2019.02.08 11:23</div>
-                </div>
-                <div class="record fr">+20</div>
-              </li>
-              <li class="list clearfix">
-                <div class="title_time fl">
-                  <div class="title">成功支付订单</div>
-                  <div class="time">2019.02.08 11:23</div>
-                </div>
-                <div class="record fr">+20</div>
-              </li>
-              <li class="list clearfix">
-                <div class="title_time fl">
-                  <div class="title">成功支付订单</div>
-                  <div class="time">2019.02.08 11:23</div>
-                </div>
-                <div class="record fr">+20</div>
-              </li>
-              <li class="list clearfix">
-                <div class="title_time fl">
-                  <div class="title">成功支付订单</div>
-                  <div class="time">2019.02.08 11:23</div>
-                </div>
-                <div class="record fr">+20</div>
-              </li>
-              <li class="list clearfix">
-                <div class="title_time fl">
-                  <div class="title">成功支付订单</div>
-                  <div class="time">2019.02.08 11:23</div>
-                </div>
-                <div class="record fr">+20</div>
-              </li>
-            </ul>
-            <div class="swipe_up" v-if="swipeUp">加载中...</div>
-          </div>
-        </div>
+        <scroller class="scroller"
+                  :on-refresh="refresh"
+                  :on-infinite="infinite"
+                  ref="my_scroller">
+          <ul>
+            <li class="list clearfix" v-for="(item,index) of integralList" :key="index">
+              <div class="title_time fl">
+                <div class="title">{{item.rule}}</div>
+                <div class="time">{{item.updated_at}}</div>
+              </div>
+              <div class="record fr">{{item.value}}</div>
+            </li>
+          </ul>
+        </scroller>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-  import BScroll from 'better-scroll'
-  
   export default {
     name: "integralList",
     components: {},
     data() {
       return {
-        dropDown: false,
-        swipeUp: false,
+        userId: "",
+        token: "",
+        phone: "",
+        page: 1,
+        limit: 10,
+        integralList: [],
+        totalCount: 1,
       }
     },
     created() {
@@ -112,61 +51,83 @@
     beforeMount() {
     },
     mounted() {
-      this.scrollFn()
+      this.userId = this.$utils.getCookie("userId");
+      this.token = this.$utils.getCookie("token");
+      this.phone = this.$utils.getCookie("userPhone");
+      this.getIntegralList();
     },
     watch: {},
     computed: {},
     methods: {
-      scrollFn() {
-        this.$nextTick(() => {
-          if (!this.scroll) {
-            this.scroll = new BScroll(this.$refs.bscroll, {
-              click: false,
-              scrollY: true,
-              probeType: 3,
-              refreshDelay: 20,
-            });
-          } else {
-            this.scroll.refresh();
+      //获取用户积分明细
+      getIntegralList() {
+        this.$axios({
+          method: "GET",
+          url: `${this.$baseURL}/v1/marketing/user/points/details/${this.userId}?page=${this.page}&limit=${this.limit}`,
+          headers: {
+            'X-Access-Token': `${this.token}`
           }
-          this.scroll.on('scroll', (pos) => {
-            //如果下拉超过50px 就显示刷新中...
-            if (pos.y > 100) {
-              this.dropDown = true
-            } /*else {
-              this.dropDown = false
-            }*/
-            if (this.scroll.maxScrollY > pos.y + 100) {
-              this.swipeUp = true;
-            }/*else {
-              this.swipeUp = false
-            }*/
-          })
-          
-          //touchEnd（手指离开以后触发） 通过这个方法来监听下拉刷新
-          this.scroll.on('touchEnd', (pos) => {
-            // 下拉动作
-            if (pos.y > 100) {
-              let that = this
-              window.setTimeout(function () {
-                that.dropDown = false;
-                that.scroll.refresh()
-                console.log("下拉刷新成功")
-              }, 5000)
+        }).then((res) => {
+          this.total = res.data.data.total_count;
+          res.data.data.res_list.forEach((item) => {
+            item.updated_at = this.$utils.formatDate(new Date(item.updated_at), "yyyy.MM.dd hh:mm:ss")
+          });
+          this.integralList = res.data.data.res_list;
+        }).catch((error) => {
+          console.log(error.response.data)
+        })
+      },
+      //下拉刷新
+      refresh(done) {
+        setTimeout(() => {
+          this.page = 1;
+          this.$axios({
+            method: 'GET',
+            url: `${this.$baseURL}/v1/marketing/user/points/details/${this.userId}?page=${this.page}&limit=${this.limit}`,
+            headers: {
+              'X-Access-Token': `${this.token}`
             }
-            //上拉加载 总高度>下拉的高度+50 触发加载中...
-            if (this.scroll.maxScrollY > pos.y + 100) {
-              this.swipeUp = true;
-              let that = this
-              window.setTimeout(function () {
-                that.swipeUp = false;
-                that.scroll.refresh()//使用refresh 方法 来更新scroll  解决无法滚动的问题
-                console.log("加载成功")
-              }, 5000)
-            }
+          }).then(res => {
+            this.total = res.data.data.total_count;
+            res.data.data.res_list.forEach((item) => {
+              item.updated_at = this.$utils.formatDate(new Date(item.updated_at), "yyyy.MM.dd hh:mm:ss")
+            });
+            this.integralList = res.data.data.res_list;
+            this.$refs.my_scroller.finishPullToRefresh()
+          }).catch(error => {
+            console.log(error)
           })
-        });
-      }
+        }, 1500)
+        
+      },
+      //上拉加载
+      infinite(done) {
+        setTimeout(() => {
+          this.page++;
+          this.$axios({
+            method: 'GET',
+            url: `${this.$baseURL}/v1/marketing/user/points/details/${this.userId}?page=${this.page}&limit=${this.limit}`,
+            headers: {
+              'X-Access-Token': `${this.token}`
+            }
+          }).then(res => {
+            this.total = res.data.data.total_count;
+            if (this.integralList.length >= this.total) {
+              this.$refs.my_scroller.finishInfinite(true);
+              this.page--;
+            } else {
+              res.data.data.res_list.forEach((item) => {
+                item.updated_at = this.$utils.formatDate(new Date(item.updated_at), "yyyy.MM.dd hh:mm:ss")
+              });
+              this.integralList = this.integralList.concat(res.data.data.res_list);
+              this.$refs.my_scroller.finishInfinite(false);
+            }
+          }).catch(error => {
+            console.log(error)
+          })
+        }, 1500)
+        
+      },
     },
   }
 </script>
@@ -174,18 +135,19 @@
 <style scoped lang="stylus">
   .integralList {
     .bg_wrap {
-      width: 740px;
+      width: 738px;
       height: 1210px;
       margin 0 auto
-      padding-top 30px
+      margin-top 30px
       background url("../../common/images/list_bg.png") no-repeat center
       background-size: 100% 100%;
       
       .head_wrap {
-        padding-top 20px
+        padding-top 50px
         text-align center
         position relative
         padding-bottom 30px
+        
         .num_text {
           vertical-align top
           width 200px
@@ -212,7 +174,7 @@
         .btn_wrap {
           position absolute
           right 70px
-          top 103px
+          top 133px
           
           a {
             font-size: 26px; /*px*/
@@ -239,59 +201,43 @@
         height 810px
         margin 0 auto
         overflow hidden
+        position relative
         
-        .bscroll {
-          width: 100%;
-          max-height: 810px;
-          .bscroll_container {
-            min-height: 811px;
-            .drop_down {
-              text-align center
-              font-size: 30px; /*px*/
-              line-height: 100px;
-              color: #333333;
-            }
-  
-            ul {
-              padding 0 30px
-              .list {
-                border-bottom 1px solid #e5e5e5;/*no*/
-                line-height 146px
-                .title_time {
-                  margin-top 25px
-                  .title{
-                    font-size: 30px;/*px*/
-                    color: #222222;
-                    line-height 54px
-                    vertical-align middle
-                  }
-                  .time{
-                    font-size: 24px;/*px*/
-                    color: #999999;
-                    line-height 48px
-                    vertical-align middle
-                  }
-                }
-                
-                .record {
-                  line-height 146px
-                  font-size: 34px;/*px*/
-                  color: #d90024;
-                }
+        ul {
+          padding 0 30px
+          
+          .list {
+            border-bottom 1px solid #e5e5e5; /*no*/
+            line-height 146px
+            
+            .title_time {
+              margin-top 25px
+              
+              .title {
+                font-size: 30px; /*px*/
+                color: #222222;
+                line-height 54px
+                vertical-align middle
               }
               
-              .list:last-child {
-                border-bottom none
+              .time {
+                font-size: 24px; /*px*/
+                color: #999999;
+                line-height 48px
+                vertical-align middle
               }
             }
-            .swipe_up {
-              text-align center
-              font-size: 30px; /*px*/
-              line-height: 100px;
-              color: #333333;
+            
+            .record {
+              line-height 146px
+              font-size: 34px; /*px*/
+              color: #d90024;
             }
           }
           
+          .list:last-child {
+            border-bottom none
+          }
         }
       }
     }

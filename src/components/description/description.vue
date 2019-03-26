@@ -1,19 +1,19 @@
 <template>
   <div class="description">
     <div class="image_wrap">
-      <img src="../../common/images/jd01.png" alt="">
+      <img :src="productDetails.url" alt="">
     </div>
     <div class="details_wrap">
-      <h3>20元京东卡</h3>
-      <p>20积分</p>
+      <h3>{{productDetails.name}}</h3>
+      <p>{{productDetails.price}}积分</p>
       <ul>
-        <li>商品介绍：<span>20元面值京东卡</span></li>
-        <li>适用范围：<span>人人道公众号</span></li>
-        <li>注意事项：<span>每个ID兑换一次</span></li>
-        <li>重要说明：<span>一切解释权归人人道所有</span></li>
+        <li>商品介绍：<span>{{productDetails.introduction}}</span></li>
+        <li>适用范围：<span>{{productDetails.scope}}</span></li>
+        <li>注意事项：<span>{{productDetails.item}}</span></li>
+        <li>重要说明：<span>{{productDetails.directions}}</span></li>
       </ul>
-      <button v-if="disabled" @click="centerDialogVisible = true">确认兑换</button>
-      <button class="disabled" v-if="!disabled">确认兑换</button>
+      <button v-if="lastCount&&balance>=productDetails.price" @click="centerDialogVisible = true">确认兑换</button>
+      <button class="lastCount" v-if="!lastCount||balance<productDetails.price">确认兑换</button>
     </div>
     <el-dialog title="验证手机号" :visible.sync="centerDialogVisible" center :close-on-click-modal='false' class="phone_dialog">
       <div class="title_close">
@@ -31,7 +31,11 @@
     data() {
       return {
         centerDialogVisible: false,
-        disabled: true,
+        userId:"",
+        token:"",
+        phone:"",
+        lastCount: 1,
+        balance:"",
         productDetails:{}
       }
     },
@@ -40,11 +44,29 @@
     beforeMount() {
     },
     mounted() {
+      this.userId=this.$utils.getCookie("userId");
+      this.token=this.$utils.getCookie("token");
+      this.phone=this.$utils.getCookie("userPhone");
+      this.getUserRankingList();
       this.getProductDetails();
     },
     watch: {},
     computed: {},
     methods: {
+      ////获取用户排行
+      getUserRankingList(){
+        this.$axios({
+          method:"GET",
+          url:`${this.$baseURL}/v1/marketing/user/ranking/${this.userId}`,
+          headers: {
+            'X-Access-Token': `${this.token}`
+          }
+        }).then((res)=>{
+          this.balance=Number(res.data.data.balance);
+        }).catch((error)=>{
+          console.log(error.response.data)
+        })
+      },
       //获取商品详情
       getProductDetails(){
         let id=window.sessionStorage.getItem("productId");
@@ -52,7 +74,8 @@
           method:"GET",
           url:`${this.$baseURL}/v1/marketing/commodity/details/${id}`,
         }).then((res)=>{
-          console.log(res.data.data)
+          this.productDetails=res.data.data;
+          this.lastCount=res.data.data.last_count;
         }).catch((error)=>{
           console.log(error.response.data)
         })
@@ -129,7 +152,7 @@
         margin-top 102px
       }
       
-      .disabled {
+      .lastCount {
         background-color: #999999;
       }
     }

@@ -14,13 +14,13 @@
           <img src="../../common/images/head.png" alt="">
         </div>
         <div class="phone_integral">
-          <p class="phone">18801370245</p>
-          <p class="integral">我的元积分：<span>452266&nbsp;&nbsp;</span><img src="../../common/images/right.png" alt=""></p>
+          <p class="phone">{{phone}}</p>
+          <p class="integral">我的元积分：<span>{{userRanking.balance}}&nbsp;&nbsp;</span><img src="../../common/images/right.png" alt=""></p>
         </div>
       </div>
       <div>
-        <p class="ranking">您现在位列 1200 名</p>
-        <p class="percentage">排名超过全国 89% 的维修技师</p>
+        <p class="ranking">您现在位列 {{userRanking.ranking}} 名</p>
+        <p class="percentage">排名超过全国 {{userRanking.percentage}} 的维修技师</p>
       </div>
     </div>
     <div class="list_wrap">
@@ -58,6 +58,8 @@
         },
         userId:"",
         token:"",
+        phone:"",
+        userRanking:{},
         page:1,
         limit:10,
         productList:[],
@@ -68,6 +70,10 @@
     beforeMount() {
     },
     mounted() {
+      this.userId=this.$utils.getCookie("userId");
+      this.token=this.$utils.getCookie("token");
+      this.phone=this.$utils.getCookie("userPhone").substr(3);
+      this.getUserRankingList();
       this.getProductList();
     },
     watch: {},
@@ -79,9 +85,10 @@
           method:"GET",
           url:`${this.$baseURL}/v1/marketing/user/ranking/${this.userId}`,
           headers: {
-            'Access-Token': `${this.token}`
+            'X-Access-Token': `${this.token}`
           }
         }).then((res)=>{
+          this.userRanking=res.data.data;
         }).catch((error)=>{
           console.log(error.response.data)
         })
@@ -93,7 +100,6 @@
           url:`${this.$baseURL}/v1/marketing/commodity/list?page=${this.page}&limit=${this.limit}`,
         }).then((res)=>{
           this.productList=res.data.data.res_list;
-          console.log(res.data.data)
         }).catch((error)=>{
           console.log(error.response.data)
         })
