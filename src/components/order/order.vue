@@ -4,129 +4,159 @@
       <ul>
         <li>
           <label>
-            <span :class="{'checked':status==='full'}">全部状态</span>
-            <input type="radio" value="full" name="orderStatus" v-model="status" checked>
+            <span :class="{'checked':orderStatus===''}">全部状态</span>
+            <input type="radio" value="" name="orderStatus" v-model="orderStatus" checked>
           </label>
         </li>
         <li>
           <label>
-            <span :class="{'checked':status==='succeed'}">交易成功</span>
-            <input type="radio" value="succeed" name="orderStatus" v-model="status">
+            <span :class="{'checked':orderStatus==='2'}">交易成功</span>
+            <input type="radio" value="2" name="orderStatus" v-model="orderStatus">
           </label>
         </li>
         <li>
           <label>
-            <span :class="{'checked':status==='failed'}">交易失败</span>
-            <input type="radio" value="failed" name="orderStatus" v-model="status">
+            <span :class="{'checked':orderStatus==='0'}">交易失败</span>
+            <input type="radio" value="0" name="orderStatus" v-model="orderStatus">
           </label>
         </li>
       </ul>
     </div>
     <div class="list_wrap">
-      <div class="bscroll" ref="bscroll">
-        <div class="bscroll_container">
-          <div class="drop_down" v-if="dropDown">刷新中...</div>
-          <ul>
-            <li class="list" v-for="item of 10">
-              <div class="list_title clearfix">
-                <span>订单号：yz294485553</span>
-                <span class="fr">交易成功</span>
-              </div>
-              <ul class="list_content">
-                <li class="content_head">
-                  <span class="img_wrap"><img src="../../common/images/jd03.png" alt=""></span>
-                  <span>20元话费</span>
-                </li>
-                <li class="content_time">订单时间：<span>2018.10.03 15:34</span></li>
-                <li class="content_description" v-if="a">共 <span>2</span> 件商品，实付 <span>40</span> 积分</li>
-                <li class="content_description" v-if="!a">抱歉，兑换商品已抢空；未消耗您的积分</li>
-              </ul>
-            </li>
-          </ul>
-          <div class="swipe_up" v-if="swipeUp">加载中...</div>
-        </div>
-      </div>
+      <scroller class="scroller"
+                :on-refresh="refresh"
+                :on-infinite="infinite"
+                ref="my_scroller">
+        <ul>
+          <li class="list" v-for="(item,index) of orderList" :key="item.order_id">
+            <div class="list_title clearfix">
+              <span>订单号：{{item.order_id}}</span>
+              <span class="fr">{{item.order_status===2?'交易成功':'交易失败'}}</span>
+            </div>
+            <ul class="list_content">
+              <li class="content_head">
+                <span class="img_wrap"><img :src="item.commodity_img" alt=""></span>
+                <span>{{item.commodity_name}}</span>
+              </li>
+              <li class="content_time">订单时间：<span>{{item.updated_at}}</span></li>
+              <li class="content_description" v-if="item.order_status===2">共 <span>{{item.count}}</span> 件商品，实付 <span>{{item.price}}</span> 积分</li>
+              <li class="content_description" v-if="item.order_status===0">抱歉，兑换商品已抢空；未消耗您的积分</li>
+            </ul>
+          </li>
+        </ul>
+      </scroller>
     </div>
   </div>
 </template>
 
 <script>
-  import BScroll from 'better-scroll'
   export default {
     name: "order",
     components: {},
     data() {
       return {
-        status:"full",
-        dropDown: false,
-        swipeUp: false,
-        a:true,
+        userId: "5be54972347f8d000144f98f",
+        orderStatus:"",
+        token:"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1NjU0OTQ1NTMsInVzZXJfaWQiOiI1YTZlYjMxN2UyNzk0ZDM0NDFkNDUxODEiLCJkZXZpY2VfaWQiOiJbMTM2IDYwIDEyOSAyOCAxMTAgMjUyIDE2OSA5MiAxOTUgMTk2IDI1NCA4MyAxNDUgMjE4IDQ4IDE1Ml0ifQ.O5JTL0U2mXVFcyySg1YR7in1QXvD4Jyk8U-hMdRarTQ",
+        page:1,
+        limit:5,
+        total:0,
+        orderList:[],
       }
     },
     created() {
     },
     beforeMount() {
+      //this.userId = this.$utils.getCookie("userId");
+      //this.token = this.$utils.getCookie("token");
+      this.getOrderList();
     },
     mounted() {
-      this.scrollFn()
     },
     watch: {
-      status:function () {
-        console.log(this.status)
+      orderStatus:function () {
+        this.orderList=[];
+        this.page=1;
+        this.$refs.my_scroller.finishInfinite(false);
+        this.getOrderList();
       }
     },
     computed: {},
     methods: {
-      scrollFn() {
-        this.$nextTick(() => {
-          if (!this.scroll) {
-            this.scroll = new BScroll(this.$refs.bscroll, {
-              click: false,
-              scrollY: true,
-              probeType: 3,
-              refreshDelay: 20,
-            });
-          } else {
-            this.scroll.refresh();
+      //获取订单列表
+      getOrderList(){
+        this.$axios({
+          method: "GET",
+          url:
+            `${this.$baseURL}/v1/marketing/order/list?user_id=${this.userId}&order_status=${this.orderStatus}&page=${this.page}&limit=${this.limit}`,
+          headers: {
+            'X-Access-Token': `${this.token}`
           }
-          this.scroll.on('scroll', (pos) => {
-            //如果下拉超过50px 就显示刷新中...
-            if (pos.y > 100) {
-              this.dropDown = true
-            } /*else {
-              this.dropDown = false
-            }*/
-            if (this.scroll.maxScrollY > pos.y + 100) {
-              this.swipeUp = true;
-            }/*else {
-              this.swipeUp = false
-            }*/
-          })
-      
-          //touchEnd（手指离开以后触发） 通过这个方法来监听下拉刷新
-          this.scroll.on('touchEnd', (pos) => {
-            // 下拉动作
-            if (pos.y > 100) {
-              let that = this
-              window.setTimeout(function () {
-                that.dropDown = false;
-                that.scroll.refresh()
-                console.log("下拉刷新成功")
-              }, 5000)
+        }).then((res) => {
+          this.total = res.data.data.total_count;
+          if(res.data.data.res_list){
+            res.data.data.res_list.forEach((item) => {
+              item.updated_at = this.$utils.formatDate(new Date(item.updated_at), "yyyy.MM.dd hh:mm:ss")
+            });
+            this.orderList = res.data.data.res_list;
+          }
+        }).catch((error) => {
+          console.log(error.response.data)
+        })
+      },
+      //下拉刷新
+      refresh(done) {
+        setTimeout(() => {
+          this.page = 1;
+          this.$axios({
+            method: 'GET',
+            url: `${this.$baseURL}/v1/marketing/order/list?user_id=${this.userId}&order_status=${this.orderStatus}&page=${this.page}&limit=${this.limit}`,
+            headers: {
+              'X-Access-Token': `${this.token}`
             }
-            //上拉加载 总高度>下拉的高度+50 触发加载中...
-            if (this.scroll.maxScrollY > pos.y + 100) {
-              this.swipeUp = true;
-              let that = this
-              window.setTimeout(function () {
-                that.swipeUp = false;
-                that.scroll.refresh()//使用refresh 方法 来更新scroll  解决无法滚动的问题
-                console.log("加载成功")
-              }, 5000)
+          }).then(res => {
+            this.total = res.data.data.total_count;
+            if(res.data.data.res_list){
+              res.data.data.res_list.forEach((item) => {
+                item.updated_at = this.$utils.formatDate(new Date(item.updated_at), "yyyy.MM.dd hh:mm:ss")
+              });
+              this.orderList = res.data.data.res_list;
             }
+            this.$refs.my_scroller.finishPullToRefresh()
+          }).catch(error => {
+            console.log(error)
           })
-        });
-      }
+        }, 1500)
+    
+      },
+      //上拉加载
+      infinite(done) {
+        setTimeout(() => {
+          this.page++;
+          this.$axios({
+            method: 'GET',
+            url: `${this.$baseURL}/v1/marketing/order/list?user_id=${this.userId}&order_status=${this.orderStatus}&page=${this.page}&limit=${this.limit}`,
+            headers: {
+              'X-Access-Token': `${this.token}`
+            }
+          }).then(res => {
+            this.total = res.data.data.total_count;
+            if (this.orderList.length >= this.total) {
+              this.$refs.my_scroller.finishInfinite(true);
+              this.page--;
+            } else {
+              res.data.data.res_list.forEach((item) => {
+                item.updated_at = this.$utils.formatDate(new Date(item.updated_at), "yyyy.MM.dd hh:mm:ss")
+              });
+              this.orderList = this.orderList.concat(res.data.data.res_list);
+              this.$refs.my_scroller.finishInfinite(false);
+            }
+          }).catch(error => {
+            console.log(error)
+          })
+        }, 1500)
+    
+      },
     },
   }
 </script>
@@ -170,108 +200,92 @@
     }
     .list_wrap {
       width 688px
-      height 1334px
+      height 1244px
       margin 0 auto
       overflow hidden
-      padding-top 90px
-      .bscroll {
-        width: 100%;
-        max-height: 1198px;
-        .bscroll_container {
-          min-height: 1199px;
-          
-          .drop_down {
-            text-align center
-            font-size: 30px; /*px*/
-            line-height: 100px;
-            color: #333333;
-          }
-        
-          ul {
-            padding-bottom 10px
-            .list {
-              width: 688px;
-              height: 330px;
-              background-color: #ffffff;
-              box-shadow: 0 0 3px rgba(0, 0, 0, 0.3) inset;
-              border-radius: 30px;
-              margin-top 46px
-              padding 0 25px
-              .list_title{
-                line-height 86px
-                border-bottom 1px solid #eeeeee;/*no*/
+      margin-top 90px
+      position relative
+      .scroller{
+        ul {
+          padding-bottom 10px
+          width: 688px;
+          min-height 1244px
+          margin 0 auto
+          .list {
+            width: 688px;
+            height: 330px;
+            background-color: #ffffff;
+            box-shadow: 0 0 3px rgba(0, 0, 0, 0.3) inset;
+            border-radius: 30px;
+            margin-top 46px
+            padding 0 25px
+            .list_title{
+              line-height 86px
+              border-bottom 1px solid #eeeeee;/*no*/
+              span:first-child{
+                font-size: 28px;/*px*/
+                color: #333333;
+                font-weight bold
+              }
+              span:last-child{
+                font-size: 32px;/*px*/
+                color: #386cff;
+              }
+            }
+            .list_content{
+              .content_head{
+                font-size 0
+                margin-top 22px
                 span:first-child{
+                  display inline-block
+                  width 70px
+                  height 70px
+                  text-align center
+                  background-color: #f4f4f4;
+                  box-shadow: 2px 1px 12px 1px rgba(119, 119, 119, 0.07);
+                  vertical-align middle
+                  margin-right 25px
+                  img{
+                    max-width 70px
+                    max-height 70px
+                    position: relative;
+                    top: 50%;
+                    transform: translateY(-50%);
+                  }
+                }
+                span:last-child{
+                  vertical-align middle
+                  display inline-block
+                  font-size: 32px;/*px*/
+                  color: #333333;
+                  font-weight bold
+                }
+              }
+              .content_time{
+                margin-top 36px
+                font-size: 26px;/*px*/
+                color: #666666;
+                span{
+                  font-size: 28px;/*px*/
+                  color: #333333;
+                }
+              }
+              .content_description{
+                font-size: 26px;/*px*/
+                color: #666666;
+                margin-top 23px
+                span{
                   font-size: 28px;/*px*/
                   color: #333333;
                   font-weight bold
                 }
-                span:last-child{
-                  font-size: 32px;/*px*/
-                  color: #386cff;
-                }
               }
-              .list_content{
-                .content_head{
-                  font-size 0
-                  margin-top 22px
-                  span:first-child{
-                    display inline-block
-                    width 70px
-                    height 70px
-                    text-align center
-                    background-color: #f4f4f4;
-                    box-shadow: 2px 1px 12px 1px rgba(119, 119, 119, 0.07);
-                    vertical-align middle
-                    margin-right 25px
-                    img{
-                      max-width 70px
-                      max-height 70px
-                      position: relative;
-                      top: 50%;
-                      transform: translateY(-50%);
-                    }
-                  }
-                  span:last-child{
-                    vertical-align middle
-                    display inline-block
-                    font-size: 32px;/*px*/
-                    color: #333333;
-                    font-weight bold
-                  }
-                }
-                .content_time{
-                  margin-top 36px
-                  font-size: 26px;/*px*/
-                  color: #666666;
-                  span{
-                    font-size: 28px;/*px*/
-                    color: #333333;
-                  }
-                }
-                .content_description{
-                  font-size: 26px;/*px*/
-                  color: #666666;
-                  margin-top 23px
-                  span{
-                    font-size: 28px;/*px*/
-                    color: #333333;
-                    font-weight bold
-                  }
-                }
-              }
-            }
-            .list:last-child{
-              margin-bottom 46px
             }
           }
-          .swipe_up {
-            text-align center
-            font-size: 30px; /*px*/
-            line-height: 100px;
-            color: #333333;
+          .list:last-child{
+            margin-bottom 46px
           }
         }
-      
       }
     }
   }

@@ -222,41 +222,42 @@
         margin 0 auto
         overflow hidden
         position relative
-        
-        ul {
-          padding 0 30px
-          min-height 810px
-          .list {
-            border-bottom 1px solid #e5e5e5; /*no*/
-            line-height 146px
-            
-            .title_time {
-              margin-top 25px
-              
-              .title {
-                font-size: 30px; /*px*/
-                color: #222222;
-                line-height 54px
-                vertical-align middle
-              }
-              
-              .time {
-                font-size: 24px; /*px*/
-                color: #999999;
-                line-height 48px
-                vertical-align middle
-              }
-            }
-            
-            .record {
+        .scroller{
+          ul {
+            padding 0 30px
+            min-height 810px
+            .list {
+              border-bottom 1px solid #e5e5e5; /*no*/
               line-height 146px
-              font-size: 34px; /*px*/
-              color: #d90024;
+      
+              .title_time {
+                margin-top 25px
+        
+                .title {
+                  font-size: 30px; /*px*/
+                  color: #222222;
+                  line-height 54px
+                  vertical-align middle
+                }
+        
+                .time {
+                  font-size: 24px; /*px*/
+                  color: #999999;
+                  line-height 48px
+                  vertical-align middle
+                }
+              }
+      
+              .record {
+                line-height 146px
+                font-size: 34px; /*px*/
+                color: #d90024;
+              }
             }
-          }
-          
-          .list:last-child {
-            border-bottom none
+    
+            .list:last-child {
+              border-bottom none
+            }
           }
         }
       }
