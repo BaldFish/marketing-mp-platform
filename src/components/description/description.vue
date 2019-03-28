@@ -12,13 +12,54 @@
         <li>注意事项：<span>{{productDetails.item}}</span></li>
         <li>重要说明：<span>{{productDetails.directions}}</span></li>
       </ul>
-      <button v-if="lastCount&&balance>=productDetails.price" @click="centerDialogVisible = true">确认兑换</button>
+      <button v-if="lastCount&&balance>=productDetails.price" @click="createOrder">确认兑换</button>
       <button class="lastCount" v-if="!lastCount||balance<productDetails.price">确认兑换</button>
     </div>
-    <el-dialog title="验证手机号" :visible.sync="centerDialogVisible" center :close-on-click-modal='false' class="phone_dialog">
+    <el-dialog title="验证手机号" :visible.sync="phoneDialogVisible" center class="phone_dialog">
       <div class="title_close">
-        <p>验证手机号</p>
-        <span class="el-icon-close"></span>
+        <p class="title">验证手机号</p>
+        <span class="close el-icon-close" @click="cancelOrder"></span>
+        <p class="tips">输入手机尾号{{phone.substr(-4)}}接收到的短信验证码</p>
+      </div>
+      <div class="input_wrap">
+        <input type="text" placeholder="短信验证码" :disabled="disabled" v-model="code">
+        <span v-if="codeValue" @click="getPhoneCode">发送</span>
+        <span v-else style="background-color: #7d7d7d;color: #ffffff;">倒计时（{{second}}）</span>
+      </div>
+    </el-dialog>
+    <el-dialog title="请输入6位交易密码" :visible.sync="passWordDialogVisible" center class="passWord_dialog">
+      <div class="title_close">
+        <p class="title">请输入6位交易密码</p>
+        <span class="close el-icon-close" @click="cancelOrder"></span>
+      </div>
+      <div class="input_wrap">
+        <input type="text" placeholder="6位交易密码" :disabled="disabled" v-model="passWord">
+      </div>
+    </el-dialog>
+    <el-dialog title="兑换成功" :visible.sync="successDialogVisible" center class="success_dialog">
+      <div class="title_close">
+        <div class="img_wrap">
+          <img src="../../common/images/success.png" alt="成功">
+        </div>
+        <p>对换成功</p>
+        <span class="close el-icon-close" @click="successDialogVisible = false"></span>
+      </div>
+      <div class="input_wrap">
+        <span @click="turnOrder">查看订单</span>
+        <span @click="share">分享一下</span>
+      </div>
+    </el-dialog>
+    <el-dialog title="分享提示" :visible.sync="shareDialogVisible" center class="share_dialog">
+      <div class="title_close">
+        <div class="img_wrap">
+          <img src="../../common/images/success.png" alt="成功">
+        </div>
+        <p>对换成功</p>
+        <span class="close el-icon-close" @click="successDialogVisible = false"></span>
+      </div>
+      <div class="input_wrap">
+        <span @click="turnOrder">查看订单</span>
+        <span @click="share">分享一下</span>
       </div>
     </el-dialog>
   </div>
@@ -30,55 +71,195 @@
     components: {},
     data() {
       return {
-        centerDialogVisible: false,
-        userId:"",
-        token:"",
-        phone:"",
+        phoneDialogVisible: false,
+        passWordDialogVisible: false,
+        successDialogVisible: false,
+        shareDialogVisible:true,
+        userId: "",
+        token: "",
+        phone: "",
         lastCount: 1,
-        balance:"",
-        productDetails:{}
+        balance: "",
+        productDetails: {},
+        codeValue: true,
+        passWord: "",
+        code: "",
+        second: 60,
+        disabled: false,
+        commodityId: "",
+        openId: "",
+        orderId: "",
+        phraseStatus: 0
       }
     },
     created() {
     },
     beforeMount() {
+      this.userId = this.$utils.getCookie("userId");
+      this.token = this.$utils.getCookie("token");
+      this.openId = this.$utils.getCookie("openId");
+      if (this.$utils.getCookie("userPhone")) {
+        this.phone = this.$utils.getCookie("userPhone").substr(3);
+      }
     },
     mounted() {
-      this.userId=this.$utils.getCookie("userId");
-      this.token=this.$utils.getCookie("token");
-      this.phone=this.$utils.getCookie("userPhone");
       this.getUserRankingList();
       this.getProductDetails();
     },
-    watch: {},
+    watch: {
+      passWord: function () {
+        if (this.passWord.length === 6) {
+          this.payOrder();
+        }
+      },
+      code: function () {
+        if (this.code.length === 4) {
+          this.payOrder();
+        }
+      },
+    },
     computed: {},
     methods: {
       //获取用户排行
-      getUserRankingList(){
+      getUserRankingList() {
         this.$axios({
-          method:"GET",
-          url:`${this.$baseURL}/v1/marketing/user/ranking/${this.userId}`,
+          method: "GET",
+          url: `${this.$baseURL}/v1/marketing/user/ranking/${this.userId}`,
           headers: {
             'X-Access-Token': `${this.token}`
           }
-        }).then((res)=>{
-          this.balance=Number(res.data.data.balance);
-        }).catch((error)=>{
+        }).then((res) => {
+          this.balance = Number(res.data.data.balance);
+        }).catch((error) => {
           console.log(error.response.data)
         })
       },
       //获取商品详情
-      getProductDetails(){
-        let id=window.sessionStorage.getItem("productId");
+      getProductDetails() {
+        let id = window.sessionStorage.getItem("productId");
         this.$axios({
-          method:"GET",
-          url:`${this.$baseURL}/v1/marketing/commodity/details/${id}`,
-        }).then((res)=>{
-          this.productDetails=res.data.data;
-          this.lastCount=res.data.data.last_count;
-        }).catch((error)=>{
+          method: "GET",
+          url: `${this.$baseURL}/v1/marketing/commodity/details/${id}`,
+        }).then((res) => {
+          this.productDetails = res.data.data;
+          this.lastCount = res.data.data.last_count;
+          this.commodityId = res.data.data.id
+        }).catch((error) => {
           console.log(error.response.data)
         })
+      },
+      //获取短信验证码
+      getPhoneCode() {
+        if (this.phone) {
+          //倒计时
+          this.codeValue = false;
+          let interval = window.setInterval(() => {
+            if ((this.second--) <= 0) {
+              this.codeValue = true;
+              this.second = 60;
+              window.clearInterval(interval);
+            }
+          }, 1000);
+          //请求后端接口获取验证码
+          this.$axios({
+            method: 'post',
+            url: `${this.$baseURL}/v1/sms/code`,
+            data: this.$querystring.stringify({
+              phone: '+86' + this.phone, //手机号
+              type: 5 //1-注册，2-修改密码, 3-登录,5-发起鉴宝
+            })
+          }).then(res => {
+          }).catch(error => {
+            console.log(error);
+          })
+          
+        }
+      },
+      //创建订单
+      createOrder() {
+        let data = {
+          user_id: this.userId,
+          commodity_id: this.commodityId,
+          count: 1,
+          openid: this.openId
+        };
+        this.$axios({
+          method: 'POST',
+          url: `${this.$baseURL}/v1/marketing/order`,
+          data: this.$querystring.stringify(data),
+          headers: {
+            'X-Access-Token': this.token,
+            'Content-Type': 'application/x-www-form-urlencoded'
+          }
+        }).then(res => {
+          this.orderId = res.data.data.order_id;
+          this.phraseStatus = res.data.data.phrase_status;
+          if (res.data.data.phrase_status === 0) {
+            this.phoneDialogVisible = false;
+            this.passWordDialogVisible = true;
+          } else if (res.data.data.phrase_status === 1) {
+            this.passWordDialogVisible = false;
+            this.phoneDialogVisible = true;
+          }
+        }).catch(error => {
+          console.log(error.response.data.message)
+        })
+      },
+      //支付订单
+      payOrder() {
+        let data = {
+          order_id: this.orderId,
+          phrase_status: this.phraseStatus,
+          phrase: this.passWord,
+          code: this.code
+        };
+        this.$axios({
+          method: 'POST',
+          url: `${this.$baseURL}/v1/marketing/order/pay`,
+          data: this.$querystring.stringify(data),
+          headers: {
+            'X-Access-Token': this.token,
+            'Content-Type': 'application/x-www-form-urlencoded'
+          }
+        }).then(res => {
+          console.log(res.data.data);
+          this.phoneDialogVisible = false;
+          this.passWordDialogVisible = false;
+          
+        }).catch(error => {
+          console.log(error)
+        });
+        this.code = "";
+        this.passWord = "";
+      },
+      //取消订单
+      cancelOrder() {
+        let data = {
+          order_id: this.orderId
+        };
+        this.$axios({
+          method: "PATCH",
+          url: `${this.$baseURL}/v1/marketing/order/cancel`,
+          data: this.$querystring.stringify(data),
+          headers: {
+            'X-Access-Token': `${this.token}`,
+            'Content-Type': 'application/x-www-form-urlencoded'
+          }
+        }).then((res) => {
+          this.phoneDialogVisible = false;
+          this.passWordDialogVisible = false;
+        }).catch((error) => {
+          console.log(error.response.data)
+        })
+      },
+      //查看订单
+      turnOrder() {
+        this.successDialogVisible = false;
+        this.$router.push('/order');
+      },
+      //分享一下
+      share(){
+      
       },
     },
   }
@@ -157,40 +338,339 @@
         background-color: #999999;
       }
     }
+    
     .phone_dialog {
-      .title_close{
+      .title_close {
         position relative
-        p{
+        
+        .title {
           height 106px
           line-height 105px
-          font-size: 32px;/*px*/
+          font-size: 32px; /*px*/
           color: #333333;
           text-align center
           font-weight bold
-          border-bottom: solid 1px #eeeeee;/*no*/
+          border-bottom: solid 1px #eeeeee; /*no*/
         }
-        span{
+        
+        .close {
           position absolute
           top 33px
           right 43px
-          font-size 32px;/*px*/
+          font-size 32px; /*px*/
+        }
+        
+        .tips {
+          font-size: 22px; /*px*/
+          color: #666666;
+          text-align center
+          margin-top 20px
+        }
+        
+      }
+      
+      .input_wrap {
+        text-align center
+        padding-top 45px
+        font-size 0
+        
+        input {
+          width 270px
+          height 81px
+          border-radius: 32px 0px 0px 32px;
+          border: 2px solid #386cff; /*no*/
+          margin-right 20px
+          font-size: 30px; /*px*/
+          color: #999999;
+          text-align center
+          padding 5px
+        }
+        
+        /*input::-webkit-input-placeholder {
+                color: #999999;
+                font-size: 24px;!*px*!
+              }*/
+        
+        span {
+          display inline-block
+          width 220px
+          height 81px
+          line-height 81px
+          background-color: #386cff;
+          border-radius: 0px 32px 32px 0px;
+          font-size: 30px; /*px*/
+          color: #ffffff;
+          vertical-align top
         }
       }
     }
+    
+    .passWord_dialog {
+      .title_close {
+        position relative
+        
+        .title {
+          height 106px
+          line-height 105px
+          font-size: 32px; /*px*/
+          color: #333333;
+          text-align center
+          font-weight bold
+          border-bottom: solid 1px #eeeeee; /*no*/
+        }
+        
+        .close {
+          position absolute
+          top 33px
+          right 43px
+          font-size 32px; /*px*/
+        }
+        
+        .tips {
+          font-size: 22px; /*px*/
+          color: #666666;
+          text-align center
+          margin-top 20px
+        }
+        
+      }
+      
+      .input_wrap {
+        text-align center
+        padding-top 45px
+        font-size 0
+        
+        input {
+          width 270px
+          height 81px
+          border-bottom: 1px solid #386cff; /*no*/
+          font-size: 30px; /*px*/
+          color: #999999;
+          text-align center
+          padding 5px
+        }
+        
+        input[disabled] {
+          background-color #ffffff
+        }
+      }
+    }
+    
+    .success_dialog {
+      .title_close {
+        position relative
+        text-align center
+        padding-top 47px
+        
+        .img_wrap {
+          width 70px
+          height 70px
+          margin 0 auto
+          
+          img {
+            width 100%
+            height 100%
+          }
+        }
+        
+        p {
+          text-align center
+          font-size: 36px; /*px*/
+          color: #333333;
+          font-weight bold
+          margin-top 28px
+        }
+        
+        .close {
+          position absolute
+          top 33px
+          right 43px
+          font-size 32px; /*px*/
+        }
+        
+        .tips {
+          font-size: 22px; /*px*/
+          color: #666666;
+          text-align center
+          margin-top 20px
+        }
+        
+      }
+      
+      .input_wrap {
+        text-align center
+        font-size 0
+        box-shadow: 0px 3px 46px 8px rgba(152, 152, 152, 0.14);
+        position absolute
+        bottom 0
+        width 100%
+        
+        span {
+          display inline-block
+          font-size: 30px; /*px*/
+          width 50%
+          height 80px
+          line-height 80px
+        }
+        
+        span:first-child {
+          background-color: #ffffff;
+          border-radius: 0px 0px 0px 32px;
+          color: #333333;
+        }
+        
+        span:last-child {
+          background-color: #386cff;
+          border-radius: 0px 0px 32px 0px;
+          color: #ffffff;
+        }
+      }
+    }
+    .share_dialog {
+        .title_close {
+          position relative
+          text-align center
+          padding-top 47px
+    
+          .img_wrap {
+            width 70px
+            height 70px
+            margin 0 auto
+      
+            img {
+              width 100%
+              height 100%
+            }
+          }
+    
+          p {
+            text-align center
+            font-size: 36px; /*px*/
+            color: #333333;
+            font-weight bold
+            margin-top 28px
+          }
+    
+          .close {
+            position absolute
+            top 33px
+            right 43px
+            font-size 32px; /*px*/
+          }
+    
+          .tips {
+            font-size: 22px; /*px*/
+            color: #666666;
+            text-align center
+            margin-top 20px
+          }
+    
+        }
+  
+        .input_wrap {
+          text-align center
+          font-size 0
+          box-shadow: 0px 3px 46px 8px rgba(152, 152, 152, 0.14);
+          position absolute
+          bottom 0
+          width 100%
+    
+          span {
+            display inline-block
+            font-size: 30px; /*px*/
+            width 50%
+            height 80px
+            line-height 80px
+          }
+    
+          span:first-child {
+            background-color: #ffffff;
+            border-radius: 0px 0px 0px 32px;
+            color: #333333;
+          }
+    
+          span:last-child {
+            background-color: #386cff;
+            border-radius: 0px 0px 32px 0px;
+            color: #ffffff;
+          }
+        }
+      }
   }
 </style>
 <style lang="stylus">
-  .description{
+  .description {
     .phone_dialog {
-      .el-dialog{
+      .el-dialog {
         width 560px
         height 340px
         border-radius: 32px;
-        margin-top 240px!important
-        .el-dialog__header{
+        margin-top 240px !important
+        
+        .el-dialog__header {
           display none
+        }
+        
+        .el-dialog__body {
+          padding 0
+          margin 0
+          width 100% !important
+          height 100% !important
+        }
       }
-        .el-dialog__body{
+    }
+    
+    .passWord_dialog {
+      .el-dialog {
+        width 560px
+        height 340px
+        border-radius: 32px;
+        margin-top 240px !important
+        
+        .el-dialog__header {
+          display none
+        }
+        
+        .el-dialog__body {
+          padding 0
+          margin 0
+          width 100% !important
+          height 100% !important
+        }
+      }
+    }
+    
+    .success_dialog {
+      .el-dialog {
+        width 560px
+        height 340px
+        border-radius: 32px;
+        margin-top 240px !important
+        
+        .el-dialog__header {
+          display none
+        }
+        
+        .el-dialog__body {
+          padding 0
+          margin 0
+          width 100% !important
+          height 100% !important
+        }
+      }
+    }
+    .share_dialog {
+      .el-dialog {
+        width 560px
+        height 340px
+        border-radius: 32px;
+        margin-top 240px !important
+      
+        .el-dialog__header {
+          display none
+        }
+      
+        .el-dialog__body {
           padding 0
           margin 0
           width 100% !important

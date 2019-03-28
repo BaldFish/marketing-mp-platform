@@ -40,7 +40,7 @@
               </li>
               <li class="content_time">订单时间：<span>{{item.updated_at}}</span></li>
               <li class="content_description" v-if="item.order_status===2">共 <span>{{item.count}}</span> 件商品，实付 <span>{{item.price}}</span> 积分</li>
-              <li class="content_description" v-if="item.order_status===0">抱歉，兑换商品已抢空；未消耗您的积分</li>
+              <li class="content_description" v-if="item.order_status===3">抱歉，兑换商品已抢空；未消耗您的积分</li>
             </ul>
           </li>
         </ul>
@@ -69,6 +69,9 @@
     beforeMount() {
       //this.userId = this.$utils.getCookie("userId");
       //this.token = this.$utils.getCookie("token");
+      if(this.$utils.getCookie("userPhone")){
+        this.phone=this.$utils.getCookie("userPhone").substr(3);
+      }
       this.getOrderList();
     },
     mounted() {

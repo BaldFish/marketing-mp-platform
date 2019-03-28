@@ -72,7 +72,9 @@
     mounted() {
       this.userId=this.$utils.getCookie("userId");
       this.token=this.$utils.getCookie("token");
-      this.phone=this.$utils.getCookie("userPhone").substr(3);
+      if(this.$utils.getCookie("userPhone")){
+        this.phone=this.$utils.getCookie("userPhone").substr(3);
+      }
       this.getUserRankingList();
       this.getProductList();
     },
