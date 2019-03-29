@@ -39,7 +39,7 @@
     <el-dialog title="兑换成功" :visible.sync="successDialogVisible" center class="success_dialog">
       <div class="title_close">
         <div class="img_wrap">
-          <img src="../../common/images/success.png" alt="成功">
+          <img src="../../common/images/Success.png" alt="成功">
         </div>
         <p>对换成功</p>
         <span class="close el-icon-close" @click="successDialogVisible = false"></span>
