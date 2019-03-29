@@ -69,7 +69,7 @@
       return {
         phoneDialogVisible: false,
         passWordDialogVisible: false,
-        successDialogVisible: true,
+        successDialogVisible: false,
         shareDialogVisible: false,
         userId: "",
         token: "",
