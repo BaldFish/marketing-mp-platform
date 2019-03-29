@@ -55,9 +55,9 @@
     components: {},
     data() {
       return {
-        userId: "5be54972347f8d000144f98f",
+        userId: "",
         orderStatus:"",
-        token:"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1NjU0OTQ1NTMsInVzZXJfaWQiOiI1YTZlYjMxN2UyNzk0ZDM0NDFkNDUxODEiLCJkZXZpY2VfaWQiOiJbMTM2IDYwIDEyOSAyOCAxMTAgMjUyIDE2OSA5MiAxOTUgMTk2IDI1NCA4MyAxNDUgMjE4IDQ4IDE1Ml0ifQ.O5JTL0U2mXVFcyySg1YR7in1QXvD4Jyk8U-hMdRarTQ",
+        token:"",
         page:1,
         limit:5,
         total:0,
@@ -67,8 +67,8 @@
     created() {
     },
     beforeMount() {
-      //this.userId = this.$utils.getCookie("userId");
-      //this.token = this.$utils.getCookie("token");
+      this.userId = this.$utils.getCookie("userId");
+      this.token = this.$utils.getCookie("token");
       if(this.$utils.getCookie("userPhone")){
         this.phone=this.$utils.getCookie("userPhone").substr(3);
       }

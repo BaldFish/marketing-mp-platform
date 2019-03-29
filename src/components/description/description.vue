@@ -49,17 +49,13 @@
         <span @click="share">分享一下</span>
       </div>
     </el-dialog>
-    <el-dialog title="分享提示" :visible.sync="shareDialogVisible" center class="share_dialog">
-      <div class="title_close">
-        <div class="img_wrap">
-          <img src="../../common/images/success.png" alt="成功">
+    <el-dialog title="分享提示" :visible.sync="shareDialogVisible" center class="share_dialog" :fullscreen="true" :lock-scroll="true">
+      <div class="content_wrap">
+        <div class="img_jiantou">
+          <img src="../../common/images/fenxiang.png" alt="">
         </div>
-        <p>对换成功</p>
-        <span class="close el-icon-close" @click="successDialogVisible = false"></span>
-      </div>
-      <div class="input_wrap">
-        <span @click="turnOrder">查看订单</span>
-        <span @click="share">分享一下</span>
+        <p>点击右上角 <img src="../../common/images/more_light.png" alt=""> 按钮 即可分享</p>
+        <div class="btn" @click="shareDisappear">知道了</div>
       </div>
     </el-dialog>
   </div>
@@ -73,8 +69,8 @@
       return {
         phoneDialogVisible: false,
         passWordDialogVisible: false,
-        successDialogVisible: false,
-        shareDialogVisible:true,
+        successDialogVisible: true,
+        shareDialogVisible: false,
         userId: "",
         token: "",
         phone: "",
@@ -258,8 +254,13 @@
         this.$router.push('/order');
       },
       //分享一下
-      share(){
-      
+      share() {
+        this.successDialogVisible=false;
+        this.shareDialogVisible=true
+      },
+      //分享提示蒙层消失
+      shareDisappear(){
+        this.shareDialogVisible=false
       },
     },
   }
@@ -338,7 +339,6 @@
         background-color: #999999;
       }
     }
-    
     .phone_dialog {
       .title_close {
         position relative
@@ -455,7 +455,6 @@
         }
       }
     }
-    
     .success_dialog {
       .title_close {
         position relative
@@ -527,75 +526,50 @@
       }
     }
     .share_dialog {
-        .title_close {
-          position relative
-          text-align center
-          padding-top 47px
-    
-          .img_wrap {
-            width 70px
-            height 70px
-            margin 0 auto
-      
-            img {
-              width 100%
-              height 100%
-            }
-          }
-    
-          p {
-            text-align center
-            font-size: 36px; /*px*/
-            color: #333333;
-            font-weight bold
-            margin-top 28px
-          }
-    
-          .close {
-            position absolute
-            top 33px
-            right 43px
-            font-size 32px; /*px*/
-          }
-    
-          .tips {
-            font-size: 22px; /*px*/
-            color: #666666;
-            text-align center
-            margin-top 20px
-          }
-    
-        }
-  
-        .input_wrap {
-          text-align center
-          font-size 0
-          box-shadow: 0px 3px 46px 8px rgba(152, 152, 152, 0.14);
+      .content_wrap {
+        width 100%
+        height 100%
+        position relative
+        .img_jiantou{
+          width 80px
+          height 101px
           position absolute
-          bottom 0
-          width 100%
-    
-          span {
-            display inline-block
-            font-size: 30px; /*px*/
-            width 50%
-            height 80px
-            line-height 80px
+          top 25px
+          right 68px
+          img{
+            width 100%
+            height 100%
           }
-    
-          span:first-child {
-            background-color: #ffffff;
-            border-radius: 0px 0px 0px 32px;
-            color: #333333;
+        }
+        p{
+          text-align center
+          padding-top 265px
+          font-size: 40px;/*px*/
+          line-height 40px
+          color: #ffffff;
+          img{
+            vertical-align middle
           }
-    
-          span:last-child {
-            background-color: #386cff;
-            border-radius: 0px 0px 32px 0px;
-            color: #ffffff;
-          }
+        }
+        .btn{
+          text-align center
+          position absolute
+          bottom 280px
+          left: 0;
+          right: 0;
+          margin-left: auto;
+          margin-right: auto;
+          margin-top 560px
+          width: 260px;
+          height: 80px;
+          line-height 80px
+          border-radius: 32px;
+          border: 2px solid #ffffff;/*no*/
+          font-size: 36px;/*px*/
+          color: #ffffff;
         }
       }
+    }
   }
 </style>
 <style lang="stylus">
@@ -639,7 +613,6 @@
         }
       }
     }
-    
     .success_dialog {
       .el-dialog {
         width 560px
@@ -661,20 +634,17 @@
     }
     .share_dialog {
       .el-dialog {
-        width 560px
-        height 340px
-        border-radius: 32px;
-        margin-top 240px !important
-      
+        background-color rgba(0, 0, 0, 0.3) !important
+        
         .el-dialog__header {
           display none
         }
-      
+        
         .el-dialog__body {
           padding 0
           margin 0
-          width 100% !important
-          height 100% !important
+          width 100%
+          height 100%
         }
       }
     }
