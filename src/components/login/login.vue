@@ -40,10 +40,10 @@
         tipsMessage:"",//提示信息
         tips:false,
         WXcode:"",
-        shareTitle:"查车况",
-        shareDesc:"维保记录、里程分析、违章查询，你想查的车况信息我都有",
-        shareUrl:location.origin+"/reportQuery/vehicleCondition",
-        shareImg:location.origin+"/static/images/fxchk.jpg",
+        shareTitle:"@技师朋友们，轻松赚积分，好礼抱回家",
+        shareDesc:"积分排行榜火热竞赛中，想要排名前列C位出道？进来比比吧！",
+        shareUrl:location.origin+"/login",
+        shareImg:location.origin+"/static/images/share01.png",
       }
     },
     created() {
@@ -173,15 +173,15 @@
           }
         }).then(res => {
           document.cookie = `userId=${res.data.data.user_id}`;
-          document.cookie = `sessionId=${res.data.data.session_id}`;
-          document.cookie = `openId=${res.data.data.openid}`;
           document.cookie = `token=${res.data.data.token}`;
           document.cookie = `userPhone=${res.data.data.phone}`;
+          document.cookie = `sessionId=${res.data.data.session_id}`;
+          document.cookie = `openId=${res.data.data.openid}`;
           document.cookie = `userImgUrl=${res.data.data.head_img}`;
           document.cookie = `nickName=${res.data.data.nick_name}`;
-          let url=window.sessionStorage.getItem('url');
-          if(url){
-            this.$router.push(url);
+          let redirectUrl=window.sessionStorage.getItem('redirectUrl');
+          if(redirectUrl){
+            this.$router.push(redirectUrl);
           }else{
             this.$router.push('/home');
           }

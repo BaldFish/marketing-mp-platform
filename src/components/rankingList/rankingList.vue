@@ -47,12 +47,13 @@
     <div class="rules_wrap">
       <div class="rules_title">*活动规则*</div>
       <ul class="rules">
-        <li class="rule">1-<span>活动时间：2019年3月4日-2019年7月15日（为期20周）；</span></li>
-        <li class="rule">1-<span>活动时间：2019年3月4日-2019年7月15日（为期20周）；</span></li>
-        <li class="rule">1-<span>活动时间：2019年3月4日-2019年7月15日（为期20周）；</span></li>
-        <li class="rule">1-<span>活动时间：2019年3月4日-2019年7月15日（为期20周）；</span></li>
-        <li class="rule">1-<span>活动时间：2019年3月4日-2019年7月15日（为期20周）；</span></li>
-        <li class="rule">1-<span>活动时间：2019年3月4日-2019年7月15日（为期20周）；</span></li>
+        <li class="rule">1.<span>活动时间：2019年3月4日-2019年7月15日 （为期20周）；</span></li>
+        <li class="rule">2.<span>活动将设20个竞争周期，每个周期结束，排名第一的用户将直接领走现金1000元；</span></li>
+        <li class="rule">3.<span>每个竞争周期为周一0点至周日24点，积分排名第一（且大于100积分）的用户即为该周积分周冠军；</span></li>
+        <li class="rule">4.<span>冠军产生后，将有工作人员在24小时内通过电话、短信等方式联系中奖者进行千元大礼发放事宜；</span></li>
+        <li class="rule">5.<span>活动期间，每个账号、每个人仅有一次参赛机会；</span></li>
+        <li class="rule">6.<span>活动期间务必保持通话畅通，无法取得联系的中奖者视为自动放弃领奖；</span></li>
+        <li class="rule">7.<span>严禁放水、作弊等操作，周排名出示后，后台将对用户积分进行二次审核，如存在不规范行为，有权对其积分进行减分、清零等操作。</span></li>
       </ul>
     </div>
   </div>
@@ -82,18 +83,28 @@
         },
         userId: "",
         token: "",
+        phone:"",
         page: 1,
         limit: 10,
         total: 0,
         activity: {},
         rankingList: [],
+        shareTitle:"@技师朋友们，轻松赚积分，好礼抱回家",
+        shareDesc:"积分排行榜火热竞赛中，想要排名前列C位出道？进来比比吧！",
+        shareUrl:location.origin+"/rankingList",
+        shareImg:location.origin+"/static/images/share01.png",
       }
     },
     created() {
+      this.$wxShare.wxShare(this,this.shareTitle, this.shareDesc,this.shareUrl,this.shareImg)
     },
     beforeMount() {
-      this.userId = this.$utils.getCookie("userId");
-      this.token = this.$utils.getCookie("token");
+      this.$utils.setTitle("排行榜");
+      if(this.$utils.getCookie("userId")&&this.$utils.getCookie("token")&&this.$utils.getCookie("userPhone")){
+        this.userId=this.$utils.getCookie("userId");
+        this.token=this.$utils.getCookie("token");
+        this.phone=this.$utils.getCookie("userPhone").substr(3);
+      }
       this.getActivity();
       this.getRankingList();
     },
@@ -108,9 +119,6 @@
           method: "GET",
           url:
             `${this.$baseURL}/v1/marketing/activity`,
-          headers: {
-            'X-Access-Token': `${this.token}`
-          }
         }).then((res) => {
           res.data.data.start_time = new Date(res.data.data.start_time).getTime();
           res.data.data.now = new Date(res.data.data.now).getTime();
@@ -214,7 +222,7 @@
     
     .list_title {
       width: 680px;
-      height: 726px;
+      height: 820px;
       box-shadow: 0px 2px 27px 8px rgba(14, 14, 14, 0.08);
       border-radius: 30px;
       margin 0 auto
@@ -229,7 +237,7 @@
       
       .list_wrap {
         width 680px
-        height 626px
+        height 720px
         margin 0 auto
         overflow hidden
         position relative
@@ -243,13 +251,11 @@
               font-size: 26px; /*px*/
               
               th {
-                //font-size: 26px;/*px*/
                 color: #000000;
               }
               
               td {
                 text-align center
-                //font-size: 26px;/*px*/
                 color: #222222;
               }
             }
@@ -286,7 +292,7 @@
           color: #333333;
           
           span {
-            padding-left 40px
+            padding-left 20px
           }
         }
       }

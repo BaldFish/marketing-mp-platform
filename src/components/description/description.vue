@@ -6,11 +6,31 @@
     <div class="details_wrap">
       <h3>{{productDetails.name}}</h3>
       <p>{{productDetails.price}}积分</p>
-      <ul>
-        <li>商品介绍：<span>{{productDetails.introduction}}</span></li>
-        <li>适用范围：<span>{{productDetails.scope}}</span></li>
-        <li>注意事项：<span>{{productDetails.item}}</span></li>
-        <li>重要说明：<span>{{productDetails.directions}}</span></li>
+      <ul class="ul_outer">
+        <li class="li_outer">
+          <span>商品介绍：</span>
+          <ul class="ul_inner">
+            <li class="li_inner" v-for="(item,index) of productDetails.introduction" :key="index">{{item}}</li>
+          </ul>
+        </li>
+        <li class="li_outer">
+          <span>适用范围：</span>
+          <ul class="ul_inner">
+            <li class="li_inner" v-for="(item,index) of productDetails.scope" :key="index">{{item}}</li>
+          </ul>
+        </li>
+        <li class="li_outer">
+          <span>注意事项：</span>
+          <ul class="ul_inner">
+            <li class="li_inner" v-for="(item,index) of productDetails.item" :key="index">{{item}}</li>
+          </ul>
+        </li>
+        <li class="li_outer">
+          <span>重要说明：</span>
+          <ul class="ul_inner">
+            <li class="li_inner" v-for="(item,index) of productDetails.directions" :key="index">{{item}}</li>
+          </ul>
+        </li>
       </ul>
       <button v-if="lastCount&&balance>=productDetails.price" @click="createOrder">确认兑换</button>
       <button class="lastCount" v-if="!lastCount||balance<productDetails.price">确认兑换</button>
@@ -85,22 +105,28 @@
         commodityId: "",
         openId: "",
         orderId: "",
-        phraseStatus: 0
+        phraseStatus: 0,
+        shareTitle:"@技师朋友们，轻松赚积分，好礼抱回家",
+        shareDesc:"积分排行榜火热竞赛中，想要排名前列C位出道？进来比比吧！",
+        shareUrl:location.origin+"/description",
+        shareImg:location.origin+"/static/images/share01.png",
       }
     },
     created() {
+      this.$wxShare.wxShare(this,this.shareTitle, this.shareDesc,this.shareUrl,this.shareImg)
     },
     beforeMount() {
-      this.userId = this.$utils.getCookie("userId");
-      this.token = this.$utils.getCookie("token");
-      this.openId = this.$utils.getCookie("openId");
-      if (this.$utils.getCookie("userPhone")) {
+      this.$utils.setTitle("商品详情");
+      if (this.$utils.getCookie("userId") && this.$utils.getCookie("token") && this.$utils.getCookie("userPhone")) {
+        this.userId = this.$utils.getCookie("userId");
+        this.token = this.$utils.getCookie("token");
         this.phone = this.$utils.getCookie("userPhone").substr(3);
+        this.openId = this.$utils.getCookie("openId");
+        this.getUserRankingList();
+        this.getProductDetails();
       }
     },
     mounted() {
-      this.getUserRankingList();
-      this.getProductDetails();
     },
     watch: {
       passWord: function () {
@@ -191,11 +217,11 @@
           this.orderId = res.data.data.order_id;
           this.phraseStatus = res.data.data.phrase_status;
           if (res.data.data.phrase_status === 0) {
-            this.phoneDialogVisible = false;
-            this.passWordDialogVisible = true;
-          } else if (res.data.data.phrase_status === 1) {
             this.passWordDialogVisible = false;
             this.phoneDialogVisible = true;
+          } else if (res.data.data.phrase_status === 1) {
+            this.phoneDialogVisible = false;
+            this.passWordDialogVisible = true;
           }
         }).catch(error => {
           console.log(error.response.data.message)
@@ -255,12 +281,12 @@
       },
       //分享一下
       share() {
-        this.successDialogVisible=false;
-        this.shareDialogVisible=true
+        this.successDialogVisible = false;
+        this.shareDialogVisible = true
       },
       //分享提示蒙层消失
-      shareDisappear(){
-        this.shareDialogVisible=false
+      shareDisappear() {
+        this.shareDialogVisible = false
       },
     },
   }
@@ -305,19 +331,31 @@
         color: #222222;
       }
       
-      ul {
+      .ul_outer {
         margin-top 24px
         padding-left 40px
         
-        li {
+        .li_outer {
           margin-top 46px
-          font-size: 26px; /*px*/
-          color: #222222;
+          font-size 0
           
           span {
-            font-size: 28px; /*px*/
+            font-size: 26px; /*px*/
+            line-height 32px;/*px*/
             color: #222222;
-            font-weight bold
+            vertical-align top
+          }
+          
+          .ul_inner {
+            display inline-block
+            width 77%
+            vertical-align top
+            .li_inner {
+              font-size: 28px; /*px*/
+              font-weight bold
+              color: #222222;
+              line-height 32px;/*px*/
+            }
           }
         }
       }
@@ -339,6 +377,7 @@
         background-color: #999999;
       }
     }
+    
     .phone_dialog {
       .title_close {
         position relative
@@ -455,6 +494,7 @@
         }
       }
     }
+    
     .success_dialog {
       .title_close {
         position relative
@@ -525,33 +565,39 @@
         }
       }
     }
+    
     .share_dialog {
       .content_wrap {
         width 100%
         height 100%
         position relative
-        .img_jiantou{
+        
+        .img_jiantou {
           width 80px
           height 101px
           position absolute
           top 25px
           right 68px
-          img{
+          
+          img {
             width 100%
             height 100%
           }
         }
-        p{
+        
+        p {
           text-align center
           padding-top 265px
-          font-size: 40px;/*px*/
+          font-size: 40px; /*px*/
           line-height 40px
           color: #ffffff;
-          img{
+          
+          img {
             vertical-align middle
           }
         }
-        .btn{
+        
+        .btn {
           text-align center
           position absolute
           bottom 280px
@@ -564,8 +610,8 @@
           height: 80px;
           line-height 80px
           border-radius: 32px;
-          border: 2px solid #ffffff;/*no*/
-          font-size: 36px;/*px*/
+          border: 2px solid #ffffff; /*no*/
+          font-size: 36px; /*px*/
           color: #ffffff;
         }
       }
@@ -613,6 +659,7 @@
         }
       }
     }
+    
     .success_dialog {
       .el-dialog {
         width 560px
@@ -632,6 +679,7 @@
         }
       }
     }
+    
     .share_dialog {
       .el-dialog {
         background-color rgba(0, 0, 0, 0.3) !important

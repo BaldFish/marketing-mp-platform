@@ -34,13 +34,13 @@
       }
     },
     created() {
-      document.cookie = `userId=${this.userId}`;
+      /*document.cookie = `userId=${this.userId}`;
       document.cookie = `token=${this.token}`;
       document.cookie = `userPhone=${this.phone}`;
-      document.cookie = `openId=${this.openId}`;
+      document.cookie = `openId=${this.openId}`;*/
     },
     beforeMount() {
-      //this.getPath();
+      this.getPath();
     },
     mounted() {
       let u = navigator.userAgent;
@@ -81,7 +81,7 @@
     watch: {
       //监听路由变化执行方法
       $route(to, from) {
-        //this.getPath();
+        this.getPath();
       }
     },
     methods: {
@@ -90,6 +90,17 @@
         this.$nextTick(() => {
           this.isRouterAlive = true
         })
+      },
+      getPath() {
+        let path = this.$route.path;
+        if (this.$utils.getCookie("userId")&&this.$utils.getCookie("token")&&this.$utils.getCookie("userPhone")) {
+          this.$router.push(path);
+        }else if(this.$_.includes(path, "/rankingList")){
+          this.$router.push('/rankingList');
+        } else {
+          window.localStorage.setItem("redirectUrl", JSON.stringify(path));
+          this.$router.push('/login')
+        }
       },
     }
   }

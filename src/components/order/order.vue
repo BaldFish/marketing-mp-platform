@@ -56,23 +56,30 @@
     data() {
       return {
         userId: "",
-        orderStatus:"",
         token:"",
+        phone:"",
+        orderStatus:"",
         page:1,
         limit:5,
         total:0,
         orderList:[],
+        shareTitle:"@技师朋友们，轻松赚积分，好礼抱回家",
+        shareDesc:"积分排行榜火热竞赛中，想要排名前列C位出道？进来比比吧！",
+        shareUrl:location.origin+"/order",
+        shareImg:location.origin+"/static/images/share01.png",
       }
     },
     created() {
+      this.$wxShare.wxShare(this,this.shareTitle, this.shareDesc,this.shareUrl,this.shareImg)
     },
     beforeMount() {
-      this.userId = this.$utils.getCookie("userId");
-      this.token = this.$utils.getCookie("token");
-      if(this.$utils.getCookie("userPhone")){
+      this.$utils.setTitle("订单列表");
+      if(this.$utils.getCookie("userId")&&this.$utils.getCookie("token")&&this.$utils.getCookie("userPhone")){
+        this.userId=this.$utils.getCookie("userId");
+        this.token=this.$utils.getCookie("token");
         this.phone=this.$utils.getCookie("userPhone").substr(3);
+        this.getOrderList();
       }
-      this.getOrderList();
     },
     mounted() {
     },
