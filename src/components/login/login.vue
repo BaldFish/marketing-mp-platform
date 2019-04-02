@@ -182,8 +182,7 @@
           document.cookie = `sessionId=${res.data.data.session_id}`;
           document.cookie = `openId=${res.data.data.openid}`;
           document.cookie = `userImgUrl=${res.data.data.head_img}`;
-          //document.cookie = `nickName=${res.data.data.nick_name}`;
-          console.log(res.data.data.nick_name)
+          document.cookie = `nickName=${res.data.data.nick_name}`;
           let redirectUrl=window.sessionStorage.getItem('redirectUrl');
           if(redirectUrl){
             this.$router.push(redirectUrl);

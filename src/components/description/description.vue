@@ -32,8 +32,8 @@
           </ul>
         </li>
       </ul>
-      <button v-if="lastCount&&balance>=productDetails.price" @click="createOrder">确认兑换</button>
-      <button class="lastCount" v-if="!lastCount||balance<productDetails.price">确认兑换</button>
+      <button v-if="!lastCount&&balance>=productDetails.price" @click="createOrder">确认兑换</button>
+      <button class="lastCount" v-if="lastCount||balance<productDetails.price" @click="callTips('您的积分不足，请您关注元征产品服务；')">积分不足</button>
     </div>
     <el-dialog title="验证手机号" :visible.sync="phoneDialogVisible" center class="phone_dialog">
       <div class="title_close">
@@ -78,6 +78,9 @@
         <div class="btn" @click="shareDisappear">知道了</div>
       </div>
     </el-dialog>
+    <div class="errorTip_wrap" >
+      <div class="errorTip" v-if="tips">{{tipsMessage}}</div>
+    </div>
   </div>
 </template>
 
@@ -106,14 +109,16 @@
         openId: "",
         orderId: "",
         phraseStatus: 0,
-        shareTitle:"@技师朋友们，轻松赚积分，好礼抱回家",
-        shareDesc:"积分排行榜火热竞赛中，想要排名前列C位出道？进来比比吧！",
-        shareUrl:location.origin+"/description",
-        shareImg:location.origin+"/static/images/share01.png",
+        shareTitle: "@技师朋友们，轻松赚积分，好礼抱回家",
+        shareDesc: "积分排行榜火热竞赛中，想要排名前列C位出道？进来比比吧！",
+        shareUrl: location.origin + "/description",
+        shareImg: location.origin + "/static/images/share01.png",
+        tipsMessage:"",//提示信息
+        tips:true,
       }
     },
     created() {
-      this.$wxShare.wxShare(this,this.shareTitle, this.shareDesc,this.shareUrl,this.shareImg)
+      this.$wxShare.wxShare(this, this.shareTitle, this.shareDesc, this.shareUrl, this.shareImg)
     },
     beforeMount() {
       this.$utils.setTitle("商品详情");
@@ -125,7 +130,7 @@
         this.openId = this.$utils.getCookie("openId");
         this.getUserRankingList();
         this.getProductDetails();
-      }else {
+      } else {
         window.localStorage.setItem("redirectUrl", JSON.stringify(path));
         this.$router.push('/login')
       }
@@ -250,7 +255,7 @@
         }).then(res => {
           this.phoneDialogVisible = false;
           this.passWordDialogVisible = false;
-          
+          this.successDialogVisible = true;
         }).catch(error => {
           console.log(error)
         });
@@ -290,6 +295,14 @@
       //分享提示蒙层消失
       shareDisappear() {
         this.shareDialogVisible = false
+      },
+      //提示信息调用
+      callTips(tipsMessage) {
+        this.tipsMessage = tipsMessage;
+        this.tips = true;
+        window.setTimeout(() => {
+          this.tips = false;
+        }, 2000);
       },
     },
   }
@@ -344,7 +357,7 @@
           
           span {
             font-size: 26px; /*px*/
-            line-height 32px;/*px*/
+            line-height 32px; /*px*/
             color: #222222;
             vertical-align top
           }
@@ -353,11 +366,12 @@
             display inline-block
             width 77%
             vertical-align top
+            
             .li_inner {
               font-size: 28px; /*px*/
               font-weight bold
               color: #222222;
-              line-height 32px;/*px*/
+              line-height 32px; /*px*/
             }
           }
         }
@@ -619,6 +633,26 @@
         }
       }
     }
+    .errorTip_wrap{
+      width 100%
+      text-align center
+      font-size 0
+      position fixed
+      top 50%
+      .errorTip{
+        display inline-block
+        box-sizing border-box
+        line-height 1.6
+        max-width 520px;
+        padding 20px 30px
+        background-color #000000
+        opacity 0.7
+        font-size 26px;/*px*/
+        color #ffffff
+        border-radius 30px
+      }
+    }
+  
   }
 </style>
 <style lang="stylus">

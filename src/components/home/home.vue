@@ -18,7 +18,7 @@
           <p class="integral" @click="turnIntegralList">我的元积分：<span>{{userRanking.balance}}&nbsp;&nbsp;</span><img src="../../common/images/right.png" alt=""></p>
         </div>
       </div>
-      <div>
+      <div v-if="userRanking.balance">
         <p class="ranking">您现在位列 {{userRanking.ranking}} 名</p>
         <p class="percentage">排名超过全国 {{userRanking.percentage}} 的维修技师</p>
       </div>
