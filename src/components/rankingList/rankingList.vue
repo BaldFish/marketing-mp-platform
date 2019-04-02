@@ -35,7 +35,7 @@
               <th>手机号</th>
               <th>积分总额</th>
             </tr>
-            <tr v-for="(item,index) of rankingList" :key="item.id">
+            <tr v-for="(item,index) of rankingList" :key="item.id" @click="turnIntegralList">
               <td>{{index+1}}</td>
               <td>{{item.phone}}</td>
               <td>{{item.balance}}</td>
@@ -184,6 +184,10 @@
           })
         }, 1500)
         
+      },
+      //跳转积分列表页
+      turnIntegralList(){
+        this.$router.push('/integralList')
       },
     },
   }

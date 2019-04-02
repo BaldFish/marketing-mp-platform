@@ -56,12 +56,16 @@
     },
     beforeMount() {
       this.$utils.setTitle("积分列表");
+      let path = this.$route.path;
       if(this.$utils.getCookie("userId")&&this.$utils.getCookie("token")&&this.$utils.getCookie("userPhone")){
         this.userId=this.$utils.getCookie("userId");
         this.token=this.$utils.getCookie("token");
         this.phone=this.$utils.getCookie("userPhone").substr(3);
         this.getUserRankingList();
         this.getIntegralList();
+      }else {
+        window.localStorage.setItem("redirectUrl", JSON.stringify(path));
+        this.$router.push('/login')
       }
     },
     mounted() {

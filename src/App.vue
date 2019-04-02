@@ -40,7 +40,6 @@
       document.cookie = `openId=${this.openId}`;*/
     },
     beforeMount() {
-      this.getPath();
     },
     mounted() {
       let u = navigator.userAgent;
@@ -81,7 +80,7 @@
     watch: {
       //监听路由变化执行方法
       $route(to, from) {
-        this.getPath();
+        //this.getPath();
       }
     },
     methods: {

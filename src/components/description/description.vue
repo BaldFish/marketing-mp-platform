@@ -117,6 +117,7 @@
     },
     beforeMount() {
       this.$utils.setTitle("商品详情");
+      let path = this.$route.path;
       if (this.$utils.getCookie("userId") && this.$utils.getCookie("token") && this.$utils.getCookie("userPhone")) {
         this.userId = this.$utils.getCookie("userId");
         this.token = this.$utils.getCookie("token");
@@ -124,6 +125,9 @@
         this.openId = this.$utils.getCookie("openId");
         this.getUserRankingList();
         this.getProductDetails();
+      }else {
+        window.localStorage.setItem("redirectUrl", JSON.stringify(path));
+        this.$router.push('/login')
       }
     },
     mounted() {
