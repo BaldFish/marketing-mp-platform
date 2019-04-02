@@ -214,7 +214,7 @@
     }
     .list_wrap {
       width 688px
-      height 1244px
+      height 1124px
       margin 0 auto
       overflow hidden
       margin-top 90px
@@ -223,7 +223,7 @@
         ul {
           padding-bottom 10px
           width: 688px;
-          min-height 1244px
+          min-height 1124px
           margin 0 auto
           .list {
             width: 688px;
@@ -237,12 +237,12 @@
               line-height 86px
               border-bottom 1px solid #eeeeee;/*no*/
               span:first-child{
-                font-size: 28px;/*px*/
+                font-size: 26px;/*px*/
                 color: #333333;
                 font-weight bold
               }
               span:last-child{
-                font-size: 32px;/*px*/
+                font-size: 28px;/*px*/
                 color: #386cff;
               }
             }
@@ -270,7 +270,7 @@
                 span:last-child{
                   vertical-align middle
                   display inline-block
-                  font-size: 32px;/*px*/
+                  font-size: 30px;/*px*/
                   color: #333333;
                   font-weight bold
                 }
