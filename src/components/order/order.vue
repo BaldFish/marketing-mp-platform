@@ -214,16 +214,16 @@
     }
     .list_wrap {
       width 688px
-      height 1128px
+      height 1244px
       margin 0 auto
       overflow hidden
       margin-top 90px
       position relative
       .scroller{
         ul {
-          padding-bottom 20px
+          padding-bottom 10px
           width: 688px;
-          min-height 1128px
+          min-height 1244px
           margin 0 auto
           .list {
             width: 688px;
