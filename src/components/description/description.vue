@@ -221,11 +221,11 @@
           this.orderId = res.data.data.order_id;
           this.phraseStatus = res.data.data.phrase_status;
           if (res.data.data.phrase_status === 0) {
-            this.passWordDialogVisible = false;
-            this.phoneDialogVisible = true;
-          } else if (res.data.data.phrase_status === 1) {
             this.phoneDialogVisible = false;
             this.passWordDialogVisible = true;
+          } else if (res.data.data.phrase_status === 1) {
+            this.passWordDialogVisible = false;
+            this.phoneDialogVisible = true;
           }
         }).catch(error => {
           console.log(error.response.data.message)
@@ -248,7 +248,6 @@
             'Content-Type': 'application/x-www-form-urlencoded'
           }
         }).then(res => {
-          console.log(res.data.data);
           this.phoneDialogVisible = false;
           this.passWordDialogVisible = false;
           
