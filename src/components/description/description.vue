@@ -114,7 +114,7 @@
         shareUrl: location.origin + "/description",
         shareImg: location.origin + "/static/images/share01.png",
         tipsMessage:"",//提示信息
-        tips:true,
+        tips:false,
       }
     },
     created() {
@@ -253,12 +253,13 @@
             'Content-Type': 'application/x-www-form-urlencoded'
           }
         }).then(res => {
-          this.phoneDialogVisible = false;
-          this.passWordDialogVisible = false;
           this.successDialogVisible = true;
         }).catch(error => {
+          this.callTips('对换失败，请重新对换！')
           console.log(error)
         });
+        this.phoneDialogVisible = false;
+        this.passWordDialogVisible = false;
         this.code = "";
         this.passWord = "";
       },
