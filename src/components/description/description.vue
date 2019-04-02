@@ -32,8 +32,8 @@
           </ul>
         </li>
       </ul>
-      <button v-if="!lastCount&&balance>=productDetails.price" @click="createOrder">确认兑换</button>
-      <button class="lastCount" v-if="lastCount||balance<productDetails.price" @click="callTips('您的积分不足，请您关注元征产品服务；')">积分不足</button>
+      <button v-if="lastCount&&balance>=productDetails.price" @click="createOrder">确认兑换</button>
+      <button class="lastCount" v-if="!lastCount||balance<productDetails.price" @click="callTips('您的积分不足，请您关注元征产品服务；')">积分不足</button>
     </div>
     <el-dialog title="验证手机号" :visible.sync="phoneDialogVisible" center class="phone_dialog">
       <div class="title_close">
