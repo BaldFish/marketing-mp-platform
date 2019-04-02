@@ -214,7 +214,7 @@
     }
     .list_wrap {
       width 688px
-      height 1124px
+      height 1090px
       margin 0 auto
       overflow hidden
       margin-top 90px
@@ -223,7 +223,7 @@
         ul {
           padding-bottom 10px
           width: 688px;
-          min-height 1124px
+          min-height 1090px
           margin 0 auto
           .list {
             width: 688px;

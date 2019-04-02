@@ -168,9 +168,9 @@
   .integralList {
     .bg_wrap {
       width: 738px;
-      height: 1210px;
+      height: 1180px;
       margin 0 auto
-      margin-top 30px
+      //margin-top 30px
       background url("../../common/images/list_bg.png") no-repeat center
       background-size: 100% 100%;
       
@@ -230,14 +230,14 @@
       
       .list_wrap {
         width 680px
-        height 810px
+        height 770px
         margin 0 auto
         overflow hidden
         position relative
         .scroller{
           ul {
             padding 0 30px
-            min-height 810px
+            min-height 770px
             .list {
               border-bottom 1px solid #e5e5e5; /*no*/
               line-height 146px
