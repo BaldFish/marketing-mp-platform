@@ -27,17 +27,9 @@
     data() {
       return {
         isRouterAlive: true,
-        /*userId:"5be54972347f8d000144f98f",
-        token:"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1NjU0OTQ1NTMsInVzZXJfaWQiOiI1YTZlYjMxN2UyNzk0ZDM0NDFkNDUxODEiLCJkZXZpY2VfaWQiOiJbMTM2IDYwIDEyOSAyOCAxMTAgMjUyIDE2OSA5MiAxOTUgMTk2IDI1NCA4MyAxNDUgMjE4IDQ4IDE1Ml0ifQ.O5JTL0U2mXVFcyySg1YR7in1QXvD4Jyk8U-hMdRarTQ",
-        phone:"+8613911376992",
-        openId:"oJdS0uBaI8d2JsToe3KluPW9b5Ck",*/
       }
     },
     created() {
-      /*document.cookie = `userId=${this.userId}`;
-      document.cookie = `token=${this.token}`;
-      document.cookie = `userPhone=${this.phone}`;
-      document.cookie = `openId=${this.openId}`;*/
     },
     beforeMount() {
     },
