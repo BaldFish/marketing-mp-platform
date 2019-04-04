@@ -11,7 +11,7 @@
     <div class="summary">
       <div class="title_wrap">
         <div class="img_wrap">
-          <img src="../../common/images/head.png" alt="">
+          <img :src="userImgUrl" alt="头像">
         </div>
         <div class="phone_integral">
           <p class="phone">{{phone}}</p>
@@ -60,6 +60,7 @@
         userId:"",
         token:"",
         phone:"",
+        userImgUrl:"",
         userRanking:{},
         page:1,
         limit:10,
@@ -80,6 +81,7 @@
         this.userId=this.$utils.getCookie("userId");
         this.token=this.$utils.getCookie("token");
         this.phone=this.$utils.getCookie("userPhone").substr(3);
+        this.userImgUrl=this.$utils.getCookie("userImgUrl");
         this.getUserRankingList();
         this.getProductList();
       }else {

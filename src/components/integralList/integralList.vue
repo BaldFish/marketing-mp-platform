@@ -40,7 +40,7 @@
         userId: "",
         token: "",
         phone: "",
-        balance:"",
+        balance:0,
         page: 1,
         limit: 10,
         integralList: [],
@@ -82,7 +82,12 @@
             'X-Access-Token': `${this.token}`
           }
         }).then((res)=>{
-          this.balance=Number(res.data.data.balance);
+          if(Number(res.data.data.balance)){
+            this.balance=Number(res.data.data.balance);
+          }else{
+            this.balance=0
+          }
+          
         }).catch((error)=>{
           console.log(error.response.data)
         })
