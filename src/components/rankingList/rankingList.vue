@@ -226,7 +226,7 @@
     
     .list_title {
       width: 680px;
-      height: 820px;
+      height: 520px;
       box-shadow: 0px 2px 27px 8px rgba(14, 14, 14, 0.08);
       border-radius: 30px;
       margin 0 auto
@@ -241,7 +241,7 @@
       
       .list_wrap {
         width 680px
-        height 720px
+        height 400px
         margin 0 auto
         overflow hidden
         position relative
@@ -271,7 +271,6 @@
     
     .rules_wrap {
       width: 680px;
-      //height: 726px;
       box-shadow: 0px 2px 27px 8px rgba(14, 14, 14, 0.08);
       border-radius: 30px;
       margin 0 auto
