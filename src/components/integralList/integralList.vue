@@ -48,7 +48,7 @@
         shareTitle:"@技师朋友们，轻松赚积分，好礼抱回家",
         shareDesc:"积分排行榜火热竞赛中，想要排名前列C位出道？进来比比吧！",
         shareUrl:location.origin+"/integralList",
-        shareImg:location.origin+"/static/images/share01.jpg",
+        shareImg:location.origin+"/static/images/share01.png",
       }
     },
     created() {
