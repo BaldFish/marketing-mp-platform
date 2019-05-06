@@ -27,74 +27,76 @@
     data() {
       return {
         isRouterAlive: true,
-      }
-    },
-    created() {
-    },
-    beforeMount() {
-    },
-    mounted() {
-      let u = navigator.userAgent;
-      let isAndroid = u.indexOf('Android') > -1 || u.indexOf('Adr') > -1; //android终端
-      let isiOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/); //ios终端
-      if (isAndroid) {
-        // 注：window.onresize只能在项目内触发1次
-        let height = window.innerHeight;
-        window.onresize = function () {
-          // 通过捕获系统的onresize事件触发我们需要执行的事件
-          this.myWidth = window.innerHeight;
-          if (this.myWidth < height) {
-            document.querySelectorAll('#footer')[0].style = "position:static"
-          } else {
-            document.querySelectorAll('#footer')[0].style = "position:fixed;bottom:0"
-          }
-          if (document.activeElement.tagName === 'INPUT') {
-            document.activeElement.scrollIntoView({behavior: "smooth"})
-          }
-        }
-      }
-        /**
-         * 处理iOS 微信客户端6.7.4 键盘收起页面未下移bug
-         */
-        ;(/iphone|ipod|ipad/i.test(navigator.appVersion)) && document.addEventListener('blur', (e) => {
-        // 这里加了个类型判断，因为a等元素也会触发blur事件
-        setTimeout(function () {
-          //['input', 'textarea'].includes(e.target.localName) && e.target.scrollIntoView()
-            if(['input', 'textarea'].includes(e.target.localName)){
-              document.body.scrollTop = document.body.scrollTop;
+        created() {
+          document.cookie = `userId=${this.userId}`;
+          document.cookie = `token=${this.token}`;
+          document.cookie = `userPhone=${this.phone}`;
+          document.cookie = `openId=${this.openId}`;
+        },
+        beforeMount() {
+        },
+        mounted() {
+          let u = navigator.userAgent;
+          let isAndroid = u.indexOf('Android') > -1 || u.indexOf('Adr') > -1; //android终端
+          let isiOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/); //ios终端
+          if (isAndroid) {
+            // 注：window.onresize只能在项目内触发1次
+            let height = window.innerHeight;
+            window.onresize = function () {
+              // 通过捕获系统的onresize事件触发我们需要执行的事件
+              this.myWidth = window.innerHeight;
+              if (this.myWidth < height) {
+                document.querySelectorAll('#footer')[0].style = "position:static"
+              } else {
+                document.querySelectorAll('#footer')[0].style = "position:fixed;bottom:0"
+              }
+              if (document.activeElement.tagName === 'INPUT') {
+                document.activeElement.scrollIntoView({behavior: "smooth"})
+              }
             }
-        },100)
-      }, true)
-    },
-    beforeUpdate() {
-    },
-    computed: {},
-    watch: {
-      //监听路由变化执行方法
-      $route(to, from) {
-        //this.getPath();
-      }
-    },
-    methods: {
-      reload() {
-        this.isRouterAlive = false;
-        this.$nextTick(() => {
-          this.isRouterAlive = true
-        })
-      },
-      getPath() {
-        let path = this.$route.path;
-        if (this.$utils.getCookie("userId")&&this.$utils.getCookie("token")&&this.$utils.getCookie("userPhone")) {
-          this.$router.push(path);
-        }else if(this.$_.includes(path, "/rankingList")){
-          this.$router.push('/rankingList');
-        } else {
-          window.localStorage.setItem("redirectUrl", JSON.stringify(path));
-          this.$router.push('/login')
+          }
+          /**
+           * 处理iOS 微信客户端6.7.4 键盘收起页面未下移bug
+           */
+          ;(/iphone|ipod|ipad/i.test(navigator.appVersion)) && document.addEventListener('blur', (e) => {
+            // 这里加了个类型判断，因为a等元素也会触发blur事件
+            setTimeout(function () {
+              //['input', 'textarea'].includes(e.target.localName) && e.target.scrollIntoView()
+              if (['input', 'textarea'].includes(e.target.localName)) {
+                document.body.scrollTop = document.body.scrollTop;
+              }
+            }, 100)
+          }, true)
+        },
+        beforeUpdate() {
+        },
+        computed: {},
+        watch: {
+          //监听路由变化执行方法
+          $route(to, from) {
+            //this.getPath();
+          }
+        },
+        methods: {
+          reload() {
+            this.isRouterAlive = false;
+            this.$nextTick(() => {
+              this.isRouterAlive = true
+            })
+          },
+          getPath() {
+            let path = this.$route.path;
+            if (this.$utils.getCookie("userId") && this.$utils.getCookie("token") && this.$utils.getCookie("userPhone")) {
+              this.$router.push(path);
+            } else if (this.$_.includes(path, "/rankingList")) {
+              this.$router.push('/rankingList');
+            } else {
+              window.localStorage.setItem("redirectUrl", JSON.stringify(path));
+              this.$router.push('/login')
+            }
+          },
         }
-      },
-    }
-  }
+      }
 </script>
 
 <style scoped lang="stylus">
@@ -103,6 +105,7 @@
     display: flex;
     flex-direction: column;
     background-color: #ffffff;
+    
     .main_wrap {
       display: flex;
       flex: 1;
@@ -110,6 +113,7 @@
       margin: 0 auto;
       width 100%
       min-width 640px
+      
       .main {
         flex: 1;
         //padding-bottom 98px

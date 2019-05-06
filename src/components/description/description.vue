@@ -156,7 +156,7 @@
         this.$axios({
           method: "GET",
           url: `${this.$baseURL}/v1/marketing/user/ranking/${this.userId}`,
-          headers: {
+            headers: {
             'X-Access-Token': `${this.token}`
           }
         }).then((res) => {
