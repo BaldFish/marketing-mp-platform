@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import myHome from '@/components/home/home'
+import myShoppingMall from '@/components/shoppingMall/shoppingMall'
 import myLogin from '@/components/login/login'
 import myRankingList from '@/components/rankingList/rankingList'
 import myDescription from '@/components/description/description'
@@ -13,7 +13,7 @@ export default new Router({
   routes: [
     {
       path: "/",
-      redirect: "/home"
+      redirect: "/shoppingMall"
     },
     {
       path:'/login',
@@ -21,9 +21,9 @@ export default new Router({
       component:myLogin
     },
     {
-      path:'/home',
-      name:'home',
-      component:myHome
+      path:'/shoppingMall',
+      name:'shoppingMall',
+      component:myShoppingMall
     },
     {
       path:'/rankingList',

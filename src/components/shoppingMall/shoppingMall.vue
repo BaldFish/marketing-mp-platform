@@ -1,5 +1,5 @@
 <template>
-  <div class="home">
+  <div class="shoppingMall">
     <div class="swiper_wrap">
       <swiper :options="swiperOption" class="awesome_swiper" ref="swiperOption">
         <swiper-slide v-for="(slide, index) in swiperOption.slides" :key="index" v-if="swiperOption.slides.length">
@@ -38,7 +38,7 @@
 
 <script>
   export default {
-    name: "home",
+    name: "shoppingMall",
     components: {},
     data() {
       return {
@@ -67,7 +67,7 @@
         productList:[],
         shareTitle:"@技师朋友们，轻松赚积分，好礼抱回家",
         shareDesc:"积分排行榜火热竞赛中，想要排名前列C位出道？进来比比吧！",
-        shareUrl:location.origin+"/home",
+        shareUrl:location.origin+"/shoppingMall",
         shareImg:location.origin+"/static/images/share01.png",
       }
     },
@@ -133,7 +133,7 @@
 </script>
 
 <style scoped lang="stylus">
-  .home {
+  .shoppingMall {
     .swiper_wrap {
       width 750px
       height 300px
