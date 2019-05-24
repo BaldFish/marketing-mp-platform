@@ -60,7 +60,7 @@
 </template>
 
 <script>
-  import myCountDown from './countDown'
+  import myCountDown from '../countDown'
   export default {
     name: "rankingList",
     components: {myCountDown},

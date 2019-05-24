@@ -6,6 +6,7 @@ import myRankingList from '@/components/rankingList/rankingList'
 import myDescription from '@/components/description/description'
 import myIntegralList from '@/components/integralList/integralList'
 import myOrder from '@/components/order/order'
+import myActivity from '@/components/activity/activity'
 Vue.use(Router);
 
 export default new Router({
@@ -13,7 +14,7 @@ export default new Router({
   routes: [
     {
       path: "/",
-      redirect: "/shoppingMall"
+      redirect: "/activity"
     },
     {
       path:'/login',
@@ -44,6 +45,11 @@ export default new Router({
       path:'/order',
       name:'order',
       component:myOrder
+    },
+    {
+      path:'/activity',
+      name:'activity',
+      component:myActivity
     },
   ]
 })
