@@ -9,10 +9,11 @@
           <p class="phone">18767570875</p>
         </div>
         <div class="info_down">
-          距离会员过期还剩
-          <span class="num">23</span>
-          天，不要忘了续费
-          <img class="jiantou" src="">
+          <p class="left">我的元积分<span class="num">56562</span></p>
+          <p class="right">积分明细<img class="jiantou" src="../../common/images/jiantou.png"></p>
+        </div>
+        <div class="info_down" v-if="false">
+          <p class="lack">您当前积分不足请参与活动赚取积分</p>
         </div>
       </div>
     </div>
@@ -133,8 +134,27 @@
         }
       }
       
+      .info_wrap{
+        margin-left: 15rpx;
+        .info_up{
+          display: flex;
+          align-items: center;
+          .phone{
+            font-size: 16px;
+            color: #222222;
+          }
+        }
+        .info_down{
+          display: flex;
+          align-items: center;
+          font-size: 12px;
+          color: #999999;
+          margin-top: 40rpx;
+        }
+      }
       
     }
+    
     .swiper_wrap {
       width 750px
       height 320px
@@ -163,39 +183,6 @@
         color: #ffffff;
       }
     }
-  
     
-    
-    .info_wrap{
-      margin-left: 15rpx;
-    }
-    .info_up{
-      display: flex;
-      align-items: center;
-    }
-    .phone{
-      font-size: 16px;
-      color: #222222;
-    }
-    .vip_logo{
-      width: 105rpx;
-      height: 42rpx;
-    }
-    .info_down{
-      display: flex;
-      align-items: center;
-      font-size: 12px;
-      color: #999999;
-      margin-top: 40rpx;
-    }
-    .num{
-      font-size: 16px;
-      color: #386cff;
-    }
-    .jiantou{
-      margin-left: 30rpx;
-      width: 20rpx;
-      height: 30rpx;
-    }
   }
 </style>
